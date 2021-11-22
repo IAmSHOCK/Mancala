@@ -1,14 +1,29 @@
 // Get the modal
-var modal = document.getElementById("loginModal");
+var modal = document.getElementById("myModal");
 
 // Get the button that opens the modal
-var btn = document.getElementById("btnLogin");
+var btnLogin = document.getElementById("btnLogin");
+var btnRegras = document.getElementById("btnRegras");
+var btnClass = document.getElementById("btnClass");
+var btnConfig = document.getElementById("btnConfig");
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal 
-btn.onclick = function() {
+btnLogin.onclick = function() {
+  modal.style.display = "block";
+}
+
+btnRegras.onclick = function() {
+  modal.style.display = "block";
+}
+
+btnClass.onclick = function() {
+  modal.style.display = "block";
+}
+
+btnConfig.onclick = function() {
   modal.style.display = "block";
 }
 
