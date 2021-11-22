@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
     <link href="style.css" rel="stylesheet">
+    <script src="script.js"></script>
     <img alt="Mancala" src="images/LOGO.jpg" height="100px"> </img>
     <meta charset=UTF-8> 
   </head>
   <body>
     <div class="button">
-      <button class="btstyle" type="button">Login</button>
-      <button class="btstyle" type="button">Regras</button>
-      <button class="btstyle" type="button">Classificações</button>
-      <button class="btstyle" type="button">Configuração</button>
+      <button class="btstyle" id="btnLogin">Login</button>
+      <div id="loginModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p>Some text in the Modal..</p>
+        </div>
+      
+      </div>
+    
+      <button class="btstyle" >Regras</button>
+      <button class="btstyle" >Classificações</button>
+      <button class="btstyle" >Configuração</button>
     </div>
     <div class = "game-board">
       <div class="box"></div>
