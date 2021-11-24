@@ -33,13 +33,6 @@ body{
                 inset 2px 2px 3px rgba(0, 0, 0, .6);
 }
 
-.game-board{ 
-    display: grid;
-    grid-template-columns: 120px 120px 120px; 
-    grid-template-rows: 120px 120px;
-    justify-content: center;
-}
-
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -76,4 +69,37 @@ body{
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+.game-board{ 
+    display: flex;
+    /*grid-template-columns: 120px 120px 120px; 
+    grid-template-rows: 200px 200px;*/
+    /*justify-content: center;*/
+    margin: 50px;
+}
+
+.box-top{
+    border-radius: 50px;
+    background-color:maroon;
+    height: 150px;
+    width: 75px;
+    margin-left: 20px;
+}
+
+.box-bot{
+    border-radius: 50px;
+    background-color:maroon;
+    height: 150px;
+    width: 75px;
+    margin-left: 20px;
+    position: initial;
+}
+
+.warehouse{
+    border-radius: 50px;
+    background-color:maroon;
+    height: 300px;
+    width: 150px;
+    margin-left: 20px;
 }
