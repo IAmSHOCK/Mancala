@@ -1,40 +1,55 @@
 // Get the modal
-var modal = document.getElementById("myModal");
+const modalLogin = document.getElementById("modalLogin");
+const modalRegras = document.getElementById("modalRegras");
+const modalClass = document.getElementById("modalClass");
+const modalConfig = document.getElementById("modalConfig");
 
 // Get the button that opens the modal
-var btnLogin = document.getElementById("btnLogin");
-var btnRegras = document.getElementById("btnRegras");
-var btnClass = document.getElementById("btnClass");
-var btnConfig = document.getElementById("btnConfig");
+const btnLogin = document.getElementById("btnLogin");
+const btnRegras = document.getElementById("btnRegras");
+const btnClass = document.getElementById("btnClass");
+const btnConfig = document.getElementById("btnConfig");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+const span = document.getElementsByClassName("close");
 
 // When the user clicks the button, open the modal 
 btnLogin.onclick = function() {
-  modal.style.display = "block";
+  modalLogin.style.display = "block";
 }
 
 btnRegras.onclick = function() {
-  modal.style.display = "block";
+  modalRegras.style.display = "block";
 }
 
 btnClass.onclick = function() {
-  modal.style.display = "block";
+  modalClass.style.display = "block";
 }
 
 btnConfig.onclick = function() {
-  modal.style.display = "block";
+  modalConfig.style.display = "block";
 }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
+for(let i = 0; i < span.length; i++){
+  span[i].onclick = function() {
+    modalLogin.style.display = "none";
+    modalRegras.style.display = "none";
+    modalClass.style.display = "none";
+    modalConfig.style.display = "none";
+  }
 }
+
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
+  switch(event.target.className){
+    case 'modal': event.target.style.display = "none"; break;
+    /*
+    case 'modalLogin': modalLogin.style.display = "none"; break;
+    case 'modalRegras': modalRegras.style.display = "none"; break;
+    case 'modalClass': modalClass.style.display = "none"; break;
+    case 'modalConfig': modalConfig.style.display = "none"; break;
+  */}
 }
+

@@ -3,71 +3,82 @@
   <head>
     <link href="style.css" rel="stylesheet" defer>
     <script src="script.js" defer></script>
-    <img alt="Mancala" src="images/LOGO.jpg" height="100px"> </img>
     <meta charset=UTF-8> 
   </head>
   <body>
-    <div class="button">
-      <button class="btstyle" id="btnLogin">Login</button>
-      <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <p>Some text in the Modal..</p>
+    <div>
+      <img alt="Mancala" src="images/LOGO.jpg" height="100px"> </img>
+      <div class="button">
+        <button class="btstyle" id="btnLogin">Login</button>
+        <div id="modalLogin" class="modal">
+  
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Some text in the Modal..</p>
+          </div>
+        
         </div>
       
+        <button class="btstyle" id="btnRegras">Regras</button>
+        <div id="modalRegras" class="modal">
+  
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Teste1</p>
+          </div>
+        
+        </div>
+  
+        <button class="btstyle" id="btnClass">Classificações</button>
+        <div id="modalClass" class="modal">
+  
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Teste2</p>
+          </div>
+        
+        </div>
+  
+        <button class="btstyle" id="btnConfig">Configuração</button>
+        <div id="modalConfig" class="modal">
+  
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Some text in the Modal..</p>
+          </div>
+        </div>
       </div>
+    </div>
+
+    <div class="parent-game-board">
+      <div class="game-board">
+        <div class="warehouse"></div>
+  
+        <div class="middle">
+        <div class="line">
+          <div class="box"></div>
+          <div class="box"></div>
+          <div class="box"></div>
+        </div>
+        <div class="line">
+          <div class="box"></div>
+          <div class="box"></div>
+          <div class="box"></div>
+        </div>
+      </div>
+  
+      <div class="warehouse">
+        <div>
+          <div class="seed"></div>
+        </div>
+        
+      </div>
+      </div>
+    </div>
     
-      <button class="btstyle" id="btnRegras">Regras</button>
-      <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <p>Some text in the Modal..</p>
-        </div>
-      
-      </div>
-
-      <button class="btstyle" id="btnClass">Classificações</button>
-      <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <p>Some text in the Modal..</p>
-        </div>
-      
-      </div>
-
-      <button class="btstyle" id="btnConfig">Configuração</button>
-      <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <p>Some text in the Modal..</p>
-        </div>
-      
-      </div>
-
-    </div>
-    <div class = "game-board">
-      <div class="warehouse"></div>
-      <div class="box-top"></div>
-      <div class="box-bot"></div>
-      <div class="box-top"></div>
-      <div class="box-bot"></div>
-      <div class="box-top"></div>
-      <div class="box-bot"></div>
-      <div class="box-top"></div>
-      <div class="box-bot"></div>
-      <div class="box-top"></div>
-      <div class="box-bot"></div>
-      <div class="box-top"></div>
-      <div class="box-bot"></div>
-      <div class="warehouse"></div>
-    </div>
   </body>
 </html>
