@@ -82,31 +82,34 @@ body {
 
 .game-board {
   display: flex;
+  
 }
 
 .middle {
   display: flex;
   flex-direction: column;
 }
+
 .line {
   display: flex;
 }
 
 .box {
-  display: flex;
-  border-radius: 50px;
-  background-color: maroon;
-  height: 150px;
-  width: 75px;
-  margin: 10px;
+    display: flex;
+    justify-content: center;
+    border-radius: 50px;
+    background-color: rgb(160, 30, 30);
+    height: 150px;
+    width: 75px;
+    margin: 10px;
 }
 
 .warehouse {
   display: flex;
   border-radius: 50px;
-  background-color: maroon;
-  height: 350px;
-  width: 175px;
+  background-color: rgb(160, 30, 30);
+  height: 400px;
+  width: 200px;
 }
 
 .seed{
@@ -114,4 +117,13 @@ body {
     height: 25px;
     background: rgb(188, 190, 30);
     border-radius: 50px / 25px;
+}
+ 
+.counter{
+    border-style: solid;
+    border-color: rgb(10, 2, 2);
+    border-width: 2px;
+    height: 20px;
+    width: 10px;
+    margin: 1px;
 }
