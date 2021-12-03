@@ -1,129 +1,142 @@
 body {
-  background-color: #ff9933;
-}
-
-.button {
-  float: right;
-}
-
-.btstyle {
-  border: 0;
-  line-height: 4;
-  padding: 0 20px;
-  font-size: 1rem;
-  text-align: center;
-  color: #fff;
-  text-shadow: 1px 1px 1px #000;
-  border-radius: 10px;
-  background-color: rgba(220, 0, 0, 1);
-  background-image: linear-gradient(
-    to top left,
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.2) 30%,
-    rgba(0, 0, 0, 0)
-  );
-  box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6),
-    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
-}
-
-.btstyle:hover {
-  background-color: rgba(255, 0, 0, 1);
-}
-
-.btstyle:active {
-  box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6),
-    inset 2px 2px 3px rgba(0, 0, 0, 0.6);
-}
-
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.parent-game-board{
+    background-color: #ff9933;
+  }
+  
+  .button {
+    float: right;
+  }
+  
+  .btstyle {
+    border: 0;
+    line-height: 4;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: rgba(220, 0, 0, 1);
+    background-image: linear-gradient(
+      to top left,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.2) 30%,
+      rgba(0, 0, 0, 0)
+    );
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6),
+      inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .btstyle:hover {
+    background-color: rgba(255, 0, 0, 1);
+  }
+  
+  .btstyle:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.6),
+      inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+  }
+  
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .parent-game-board{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+  
+  
+  .game-board {
+    display: flex;
+    
+  }
+  
+  .middle {
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
-}
-
-
-.game-board {
-  display: flex;
+  }
   
-}
-
-.middle {
-  display: flex;
-  flex-direction: column;
-}
-
-.line {
-  display: flex;
-}
-
-.box {
-    display: flex;
+  .line {
+    display:flex;
+    align-items: center;
     justify-content: center;
+  }
+
+  .lineTop{
+    display:flex;
+    flex-direction: column-reverse;
+    align-items: center;
+
+    justify-content: center;
+  }
+  
+  .box {
+    display: flex;
     border-radius: 50px;
     background-color: rgb(160, 30, 30);
     height: 150px;
     width: 75px;
-    margin: 10px;
-}
-
-.warehouse {
-  display: flex;
-  border-radius: 50px;
-  background-color: rgb(160, 30, 30);
-  height: 400px;
-  width: 200px;
-}
-
-.seed{
+    margin: 5px;
+  }
+  
+  .warehouse {
+    display: flex;
+    border-radius: 50px;
+    background-color: rgb(160, 30, 30);
+    height: 400px;
+    width: 200px;
+  }
+  
+  .seed{
     width: 50px;
     height: 25px;
     background: rgb(188, 190, 30);
     border-radius: 50px / 25px;
-}
- 
-.counter{
+  }
+
+   
+  .counter{
     border-style: solid;
     border-color: rgb(10, 2, 2);
     border-width: 2px;
     height: 20px;
     width: 10px;
     margin: 1px;
-}
+  }
+  

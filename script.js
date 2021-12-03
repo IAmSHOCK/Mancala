@@ -53,3 +53,6 @@ window.onclick = function(event) {
   */}
 }
 
+class Seed{
+  
+}
