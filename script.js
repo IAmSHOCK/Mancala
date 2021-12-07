@@ -52,7 +52,59 @@ window.onclick = function(event) {
     case 'modalConfig': modalConfig.style.display = "none"; break;
   */}
 }
+window.onload = function(){
+  box = document.getElementsByClassName("box");
+  board = new GameBoard();
+  for(let i  = 0; i < box.length; i++){
+    seed = new Seed(box[i]);
+    board.pushSeed(seed);
+  }
+}
+class Box{
+  constructor(board){
+    this.box = document.createElement("div");
+    this.box.className= "box";
+    board.board.append(this.box);
+    this.seeds = [];
+    this.counter = 0;
+  }
+
+  pushSeed(seed){
+    this.seeds.push(seed);
+    counter++;
+  }
+}
+
+class GameBoard{
+  constructor(){
+    this.board = document.createElement("div");
+    this.board.className= "game-board";
+    this.boxs = [];
+    for(let i = 0; i < 3; i++){
+      box = new Box(this.board);
+      for(let j = 0; j < 4; j++){
+        seed = new Seed(box);
+      }
+      this.boxs[i] = box;
+    }
+  }
+  
+}
 
 class Seed{
-  
+  constructor(parentBox){
+    this.seed = document.createElement("div");
+    this.seed.className= "seed";
+    parentBox.box.append(this.seed);    
+  }
+  randomPos(p){
+
+  }
+
+}
+
+class Counter{
+  constructor(){
+
+  }
 }

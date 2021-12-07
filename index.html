@@ -155,56 +155,56 @@
           <div class="modal-content">
             <span class="close">&times;</span>
             <h1 style="color: rgba(220, 0, 0, 1);"><b>Configuração</b></h1>
-              <ol style="color: rgba(220, 0, 0, 1);">
-                  <li>Cavidades</li>
-                  <li>Sementes</li>
-                  <li>VS</li>
-                  <li>IA level</li>
-              </ol>
               <p>
                   <b style="color: rgba(220, 0, 0, 1);">Cavidades</b>
-                  <ul>
-                      <li>3</li>
-                      <li>4</li>
-                      <li>5</li>
-                      <li>6</li>
-                  </ul>
+                  <select size=1 name=Cavidades>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                  </select>
               </p>
               <p>
                   <b style="color: rgba(220, 0, 0, 1);">Sementes</b>
-                  <ul>
-                      <li>8</li>
-                      <li>10</li>
-                      <li>12</li>
-                      <li>14</li>
-                  </ul>
+                  <select size=1 name=Sementes>
+                    <option>8</option>
+                    <option>10</option>
+                    <option>12</option>
+                    <option>14</option>
+                  </select>
               </p>
 
               <p>
                   <b style="color: rgba(220, 0, 0, 1);">VS</b>
-                  <ul>
-                      <li>P1 vs CPU</li>
-                      <li>P1 vs P2</li>
-                  </ul>
+                  <select size=1 name=VS>
+                    <option>P1 vs CPU</option>
+                    <option>P1 vs P2</option>
+                  </select>
               </p>
 
               <p>
                   <b style="color: rgba(220, 0, 0, 1);">IA Level</b>
-                  <ul>
-                      <li>Easy</li>
-                      <li>Medium</li>
-                      <li>Hard</li>
-                  </ul>
+                  <select size=1 name=IALevel>
+                    <option>Easy</option>
+                    <option>Medium</option>
+                    <option>Hard</option>
+                  </select>
               </p>
 
                         </div>
                       </div>
                     </div>
-                  </div>
+          </div>
 
     <div class="parent-game-board">
       <div class="game-board">
-        <div class="warehouse"></div>
+        <div class="lineTop">
+          <div class="warehouse">
+            <div>
+            </div>
+          </div>
+          <div class= "counter"></div>
+        </div>
   
         <div class="middle">
           <div class="line">
@@ -242,13 +242,14 @@
             </div>  
         </div>
       </div>
-      <div class="warehouse">
-        <div>
-          <div class="seed"></div>
+      <div class="lineTop">
+        <div class="warehouse">
+          <div>
+          </div>
         </div>
-        
+        <div class= "counter"></div>
+      </div>
       </div>
     </div>
-    
   </body>
 </html>
