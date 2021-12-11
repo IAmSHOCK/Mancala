@@ -52,43 +52,59 @@ window.onclick = function(event) {
     case 'modalConfig': modalConfig.style.display = "none"; break;
   */}
 }
+
 window.onload = function(){
   box = document.getElementsByClassName("box");
-  board = new GameBoard();
-  for(let i  = 0; i < box.length; i++){
-    seed = new Seed(box[i]);
-    board.pushSeed(seed);
-  }
+  board = new GameBoard(3,4);
 }
+
 class Box{
-  constructor(board){
+  constructor(board, pos){
     this.box = document.createElement("div");
     this.box.className= "box";
-    board.board.append(this.box);
+    this.lineTop = document.createElement("div");
+    this.lineTop.className="lineTop";
+    this.lineTop.append(this.box);
+    let line;
+    if(pos == "top"){
+      line = board.querySelector(".line-top");
+    }
+    else{
+      line = board.querySelector(".line-bot");  
+    }
+    line.append(this.lineTop);
     this.seeds = [];
-    this.counter = 0;
+    this.counter = new Counter(this.lineTop);
+  }
+  
+  push(seed){
+    lastEmpty = length(seeds-1);
+    this.seeds[lastEmpty] = seed;
+    this.counter++;
+    this.counter.seeds++;
   }
 
-  pushSeed(seed){
-    this.seeds.push(seed);
-    counter++;
-  }
+  
 }
 
 class GameBoard{
-  constructor(){
-    this.board = document.createElement("div");
-    this.board.className= "game-board";
+  constructor(nboxs, yseeds){
+    this.board = document.querySelector(".game-board");
     this.boxs = [];
-    for(let i = 0; i < 3; i++){
-      box = new Box(this.board);
-      for(let j = 0; j < 4; j++){
-        seed = new Seed(box);
+    for(let i = 0; i < nboxs; i++){
+      let boxTop = new Box(this.board, "top");
+      let boxBot = new Box(this.board, "bot");
+      for(let j = 0; j < yseeds; j++){
+        let seedTop = new Seed(boxTop);
+        let seedBot = new Seed(boxBot);
       }
       this.boxs[i] = box;
     }
   }
-  
+
+  pushSeed(seed, box){
+    box.push(seed);
+  }
 }
 
 class Seed{
@@ -97,14 +113,22 @@ class Seed{
     this.seed.className= "seed";
     parentBox.box.append(this.seed);    
   }
-  randomPos(p){
+
+  randomPos(){
+    posInfo = seed.getBoundingClientRect();
+    let height = posInfo.height;
+    let width = posInfo.width;
+    const getRandom = (min, max) => Math.floor(Math.random()*(max-min+1)+min);
 
   }
 
 }
 
 class Counter{
-  constructor(){
-
+  constructor(parentBox){
+    this.seeds = 0;
+    this.counter = document.createElement("div");
+    this.counter.className= "counter";
+    parentBox.append(this.counter);   
   }
 }

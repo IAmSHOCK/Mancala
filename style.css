@@ -1,9 +1,17 @@
-body {
-    background-color: #ff9933;
+  body {
+      background-color: #d6caa4;
+      margin: 0px;
+  }
+
+  .top{
+    background-color: rgb(216, 161, 42);
+    display: flex;
+    align-items: center;
   }
   
   .button {
-    float: right;
+    margin-left: auto;
+    margin-right: 5px;
   }
   
   .btstyle {
@@ -82,7 +90,7 @@ body {
   
   .game-board {
     display: flex;
-    
+    margin-top: 20px;
   }
   
   .middle {
@@ -92,7 +100,13 @@ body {
     justify-content: center;
   }
   
-  .line {
+  .line-top {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .line-bot {
     display:flex;
     align-items: center;
     justify-content: center;
