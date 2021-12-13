@@ -78,10 +78,9 @@ class Box{
   }
   
   push(seed){
-    lastEmpty = length(seeds-1);
+    let lastEmpty = length(seeds-1);
     this.seeds[lastEmpty] = seed;
-    this.counter++;
-    this.counter.seeds++;
+    this.counter.increment();
   }
 
   
@@ -91,14 +90,16 @@ class GameBoard{
   constructor(nboxs, yseeds){
     this.board = document.querySelector(".game-board");
     this.boxs = [];
-    for(let i = 0; i < nboxs; i++){
+    nboxs *= 2; //nboxs is the number of boxes in one line
+    for(let i = 0; i < nboxs-1; i++){
       let boxTop = new Box(this.board, "top");
       let boxBot = new Box(this.board, "bot");
       for(let j = 0; j < yseeds; j++){
         let seedTop = new Seed(boxTop);
         let seedBot = new Seed(boxBot);
       }
-      this.boxs[i] = box;
+      this.boxs[i++] = boxTop;
+      this.boxs[i] = boxBot;
     }
   }
 
@@ -111,17 +112,27 @@ class Seed{
   constructor(parentBox){
     this.seed = document.createElement("div");
     this.seed.className= "seed";
-    parentBox.box.append(this.seed);    
+    parentBox.box.append(this.seed);   
+    this.randomPos(this.seed); 
   }
 
   randomPos(){
-    posInfo = seed.getBoundingClientRect();
+    let percentage = 0.05;
+    let posInfo = this.seed.parentElement.getBoundingClientRect();
     let height = posInfo.height;
     let width = posInfo.width;
-    const getRandom = (min, max) => Math.floor(Math.random()*(max-min+1)+min);
-
+    let top = posInfo.top;
+    let left = posInfo.left;
+    console.log(top);
+    console.log(left);
+    const getRandom = (min, max) => Math.floor(Math.random()*(max-min)+min);
+    top += getRandom(height*percentage, height*(1-percentage));
+    left += getRandom(width*percentage, width*(1-percentage));
+    // console.log("top = " + top);
+    // console.log("left = " + left);
+    this.seed.style.top+=top+"px";
+    this.seed.style.left+= left+"px";
   }
-
 }
 
 class Counter{
@@ -130,5 +141,12 @@ class Counter{
     this.counter = document.createElement("div");
     this.counter.className= "counter";
     parentBox.append(this.counter);   
+  }
+  increment(){
+    this.seeds++;
+  }
+
+  reset(){
+    this.seeds = 0;
   }
 }
