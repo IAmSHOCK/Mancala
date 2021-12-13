@@ -123,13 +123,11 @@ class Seed{
     let width = posInfo.width;
     let top = posInfo.top;
     let left = posInfo.left;
-    console.log(top);
-    console.log(left);
     const getRandom = (min, max) => Math.floor(Math.random()*(max-min)+min);
-    top += getRandom(height*percentage, height*(1-percentage));
-    left += getRandom(width*percentage, width*(1-percentage));
-    // console.log("top = " + top);
-    // console.log("left = " + left);
+    top = getRandom(height*percentage, height*(1-percentage));
+    left = getRandom(width*percentage, width*(1-percentage));
+    console.log("top = " + top);
+    console.log("left = " + left);
     this.seed.style.top+=top+"px";
     this.seed.style.left+= left+"px";
   }
