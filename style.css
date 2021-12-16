@@ -121,7 +121,7 @@
   }
   
   .box {
-    display: flex;
+    position: relative;
     border-radius: 25px;
     background-color: rgb(160, 30, 30);
     height: 150px;
@@ -138,7 +138,7 @@
   }
   
   .seed{
-    position: relative;
+    position: absolute;
     width: 20px;
     height: 10px;
     background: rgb(188, 190, 30);
@@ -149,6 +149,7 @@
   .counter{
     border-style: solid;
     background-color: #000;
+    color: antiquewhite;
     border-width: 2px;
     height: 20px;
     width: 10px;
