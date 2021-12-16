@@ -4,7 +4,6 @@ const modalRegras = document.getElementById("modalRegras");
 const modalClass = document.getElementById("modalClass");
 const modalConfig = document.getElementById("modalConfig");
 
-
 // Get the button that opens the modal
 const btnLogin = document.getElementById("btnLogin");
 const btnRegras = document.getElementById("btnRegras");
@@ -14,160 +13,173 @@ const btnConfig = document.getElementById("btnConfig");
 // Get the <span> element that closes the modal
 const span = document.getElementsByClassName("close");
 
-// When the user clicks the button, open the modal 
-btnLogin.onclick = function() {
+// When the user clicks the button, open the modal
+btnLogin.onclick = function () {
   modalLogin.style.display = "block";
-}
+};
 
-btnRegras.onclick = function() {
+btnRegras.onclick = function () {
   modalRegras.style.display = "block";
-}
+};
 
-btnClass.onclick = function() {
+btnClass.onclick = function () {
   modalClass.style.display = "block";
-}
+};
 
-btnConfig.onclick = function() {
+btnConfig.onclick = function () {
   modalConfig.style.display = "block";
-}
+};
 
 // When the user clicks on <span> (x), close the modal
-for(let i = 0; i < span.length; i++){
-  span[i].onclick = function() {
+for (let i = 0; i < span.length; i++) {
+  span[i].onclick = function () {
     modalLogin.style.display = "none";
     modalRegras.style.display = "none";
     modalClass.style.display = "none";
     modalConfig.style.display = "none";
-  }
+  };
 }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  switch(event.target.id){
-    case 'modalLogin':
+window.onclick = function (event) {
+  switch (event.target.id) {
+    case "modalLogin":
       modalLogin.style.display = "none";
       break;
-    case 'modalRegras':
+    case "modalRegras":
       modalRegras.style.display = "none";
       break;
-    case 'modalClass':
+    case "modalClass":
       modalClass.style.display = "none";
       break;
-    case 'modalConfig':
+    case "modalConfig":
       modalConfig.style.display = "none";
       game.updateGameBoard();
       break;
   }
-}
 
-window.onload = function(){
-  window.game = new GameBoard(3,4);
-}
-
-
-class Box{
-  constructor(board, pos){
-    this.box = document.createElement("div");
-    this.box.className= "box";
-    this.lineTop = document.createElement("div");
-    this.lineTop.className="lineTop";
-    this.lineTop.append(this.box);
-    let line;
-    if(pos == "top"){
-      line = board.querySelector(".line-top");
-    }
-    else{
-      line = board.querySelector(".line-bot");  
-    }
-    line.append(this.lineTop);
-    this.seeds = [];
-    this.counter = new Counter(this.lineTop);
+  switch (event.target.className) {
+    case "box":
+      game.play(event.target);
   }
-  
-  push(seed){
-    let lastEmpty = (length(seeds) == 0) ? 0: length(seeds-1);
+};
+
+window.onload = function () {
+  window.game = new GameBoard();
+};
+
+class Box {
+  constructor(board, pos) {
+    this.box = document.createElement("div");
+    this.box.className = "box";
+    this.lineTopBox = document.createElement("div");
+    this.lineTopBox.className = "lineTopBox";
+    this.lineTopBox.append(this.box);
+    let line;
+    if (pos == "top") {
+      line = board.querySelector(".line-top");
+    } else {
+      line = board.querySelector(".line-bot");
+    }
+    line.append(this.lineTopBox);
+    this.seeds = [];
+    this.counter = new Counter(this.lineTopBox);
+  }
+
+  push(seed) {
+    let lastEmpty = length(seeds) == 0 ? 0 : length(seeds - 1);
     this.seeds[lastEmpty] = seed;
     this.counter.increment();
   }
 
-  remove(){
-
+  remove() {
+    let childs = this.box.children;
+    this.box.removeChild(childs[0]);
+    this.counter.reduction();
+    console.dir(this);
   }
 }
 
-class GameBoard{
-  constructor(nboxs, yseeds){
+class Warehouse{
+  constructor(board) {
+    this.warehouse = document.createElement("div");
+    this.warehouse.className = "warehouse";
+    this.lineTop = document.createElement("div");
+    this.lineTop.className = "lineTop";
+    this.lineTop.append(this.warehouse);
+    
+    this.seeds = [];
+    this.counter = new Counter(this.lineTop);
+  }
+}
+
+class GameBoard {
+  constructor() {
     this.board = document.querySelector(".game-board");
     this.boxs = [];
-    for(let i = 0; i < nboxs; i++){
-      this.addBoxs();
-    }
-
-    for(let i = 0; i < this.boxs.length; i++){
-      for (let j = 0; j < yseeds; j++) {
-        new Seed(this.boxs[i]);          
-      }
-    }
-  }
-
-  updateGameBoard(){
     let select = document.getElementById("Cavidades");
     let cavidades = select.options[select.selectedIndex].value;
     select = document.getElementById("Sementes");
     let seeds = select.options[select.selectedIndex].value;
-    this.removeAll();
-    for(let i = 0; i < cavidades; i++){
+    // this.warehouses[0] = new Warehouse(this.board);
+
+    for (let i = 0; i < cavidades; i++) {
       this.addBoxs();
     }
 
-    for(let i = 0; i < this.boxs.length; i++){
+    for (let i = 1; i < this.boxs.length; i++) {
       for (let j = 0; j < seeds; j++) {
-        new Seed(this.boxs[i]);          
+        new Seed(this.boxs[i]);
       }
     }
 
-    let warehouse = document.getElementById("warehouse1");
-    warehouse[0]  
+    // this.warehouse[1] = new Warehouse(this.board);
+    console.dir(this);
   }
 
-  addBoxs(){
+  updateGameBoard() {
+    this.removeAll();
+    let gametmp = new GameBoard();
+    this.board = gametmp.board;
+    this.boxs = gametmp.boxs;
+  }
+
+  addBoxs() {
     let boxTop = new Box(this.board, "top");
     let boxBot = new Box(this.board, "bot");
     let i = this.boxs.length;
-    if(i != 0){
-        this.boxs[i++] = boxTop;
-      this.boxs[i++ ] = boxBot;
-    }
-    else{
-      this.boxs[0] = boxTop;
-      this.boxs[1] = boxBot;
+    if (i != 1) {
+      this.boxs[i++] = boxTop;
+      this.boxs[i++] = boxBot;
+    } else {
+      this.boxs[1] = boxTop;
+      this.boxs[2] = boxBot;
     }
   }
 
-  removeAll(){
-    var elements = document.getElementsByClassName("box");
-    while(elements.length > 0){
-        elements[0].parentNode.removeChild(elements[0]);
+  removeAll() {
+    var elements = document.getElementsByClassName("lineTopBox");
+    while (elements.length > 0) {
+      elements[0].parentNode.removeChild(elements[0]);
     }
-
-    elements = document.getElementsByClassName("counter");
-    while(elements.length > 0){
-        elements[0].parentNode.removeChild(elements[0]);
-    }
+    this.boxs = [];
   }
+
+  play() {}
 }
 
-class Seed{
-  constructor(parentBox){
+class Seed {
+  constructor(parentBox) {
     this.seed = document.createElement("div");
-    this.seed.className= "seed";
-    parentBox.box.append(this.seed);   
+    this.seed.className = "seed";
+    parentBox.box.append(this.seed);
     parentBox.counter.increment();
     this.randomPos();
   }
 
-  randomPos(){
-    let percentage = 0.15;
+  randomPos() {
+    let maxPercentage = 0.7;
+    let minPercentage = 0.03;
     let posInfo = this.seed.parentElement.getBoundingClientRect();
     let height = posInfo.height;
     let width = posInfo.width;
@@ -175,32 +187,40 @@ class Seed{
     let left = posInfo.left;
     // console.log("parent.top = " + top);
     // console.log("parent.left = " + left);
-    const getRandom = (min, max) => Math.floor(Math.random()*(max-min)+min);
-    top = getRandom(height*percentage, height*(1-percentage));
-    left = getRandom(width*percentage, width*(1-percentage));
+    const getRandom = (min, max) =>
+      Math.floor(Math.random() * (max - min) + min);
+    top = getRandom(height * minPercentage, height * maxPercentage);
+    left = getRandom(width * minPercentage, width * maxPercentage);
     // console.log("top = " + top);
     // console.log("left = " + left);
-    this.seed.style.top= top+"px";
-    this.seed.style.left= left+"px";
+    this.seed.style.top = top + "px";
+    this.seed.style.left = left + "px";
   }
 }
 
-class Counter{
-  constructor(parentBox){
+class Counter {
+  constructor(parentBox) {
     this.seeds = 0;
     this.counter = document.createElement("div");
-    this.counter.className= "counter";
+    this.counter.className = "counter";
     this.counter.innerHTML = this.seeds;
-    parentBox.append(this.counter);   
+    parentBox.append(this.counter);
   }
 
-  increment(){
+  increment() {
     this.seeds++;
     this.counter.innerHTML = this.seeds;
   }
 
-  reset(){
+  reduction() {
+    this.seeds--;
+    this.counter.innerHTML = this.seeds;
+  }
+
+  reset() {
     this.seeds = 0;
     this.counter.innerHTML = this.seeds;
   }
 }
+
+
