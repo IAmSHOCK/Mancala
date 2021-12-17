@@ -136,11 +136,12 @@
   }
   
   .warehouse {
-    display: flex;
+    display: relative;
     border-radius: 50px;
     background-color: rgb(160, 30, 30);
     height: 400px;
     width: 200px;
+    margin: 5px;
   }
   
   .seed{

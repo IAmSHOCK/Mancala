@@ -61,58 +61,14 @@ window.onclick = function (event) {
   switch (event.target.className) {
     case "box":
       game.play(event.target);
-      console.log(event.target);
+      // console.log(event.target);
+      break;
   }
 };
 
 window.onload = function () {
   window.game = new GameBoard();
 };
-
-class Box {
-  constructor(board, pos) {
-    this.box = document.createElement("div");
-    this.box.className = "box";
-    this.lineTopBox = document.createElement("div");
-    this.lineTopBox.className = "lineTopBox";
-    this.lineTopBox.append(this.box);
-    let line;
-    if (pos == "top") {
-      line = board.querySelector(".line-top");
-    } else {
-      line = board.querySelector(".line-bot");
-    }
-    line.append(this.lineTopBox);
-    this.seeds = [];
-    this.counter = new Counter(this.lineTopBox);
-  }
-
-  push(seed) {
-    let lastEmpty = length(seeds) == 0 ? 0 : length(seeds - 1);
-    this.seeds[lastEmpty] = seed;
-    this.counter.increment();
-  }
-
-  remove() {
-    let childs = this.box.children;
-    this.box.removeChild(childs[0]);
-    this.counter.reduction();
-  }
-}
-
-class Warehouse {
-  constructor(i) {
-    let tmp = document.getElementsByClassName("warehouse");
-    this.warehouse = tmp[i];
-    // this.warehouse.className = "warehouse";
-    // this.lineTop = document.createElement("div");
-    // this.lineTop.className = "lineTop";
-    // this.lineTop.append(this.warehouse);
-    this.lineTop = this.warehouse.parentNode;
-    this.seeds = [];
-    this.counter = new Counter(this.lineTop);
-  }
-}
 
 class GameBoard {
   constructor() {
@@ -184,7 +140,88 @@ class GameBoard {
     }
   }
 
-  play() {}
+  play(boxDiv) {
+    let id = parseInt(boxDiv.id);
+    let box = this.getBox(id);
+    let lastBox = this.boxs.length;
+    let numSeeds = box.size();
+    box.removeSeeds();
+    id += 2; //next box
+
+    for (let i = 0; i < numSeeds; i++) {
+      box = this.getBox(id);
+      if (id > lastBox) {
+        this.warehouses[1].addSeed();
+        id = lastBox-2;
+        console.log(this.warehouses[1].box);
+      } else if (id % 2 == 0 && id < lastBox && id >= 0) {  //top side
+        box.addSeed();
+        id -= 2;
+      } else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
+        box.addSeed();
+        id += 2;
+      }
+    }
+  }
+
+  getBox(id) {
+    for (let i = 0; i < this.boxs.length; i++) {
+      if (this.boxs[i].box.id == id) {
+        return this.boxs[i];
+      }
+    }
+    return null;
+  }
+}
+
+class Box {
+  constructor(board, pos) {
+    this.box = document.createElement("div");
+    this.box.className = "box";
+    this.lineTopBox = document.createElement("div");
+    this.lineTopBox.className = "lineTopBox";
+    this.lineTopBox.append(this.box);
+    let line;
+    if (pos == "top") {
+      line = board.querySelector(".line-top");
+    } else {
+      line = board.querySelector(".line-bot");
+    }
+    line.append(this.lineTopBox);
+    this.counter = new Counter(this.lineTopBox);
+  }
+
+  addSeed() {
+    let seed = new Seed(this);
+  }
+
+  removeSeeds() {
+    let children = this.box.children;
+    let size = children.length;
+    for (let i = 0; i < size; i++) {
+      children[0].remove();
+    }
+    this.counter.reset();
+  }
+  size() {
+    return this.box.childElementCount;
+  }
+}
+
+class Warehouse {
+  constructor(i) {
+    this.box = document.getElementsByClassName("warehouse")[i];
+    // this.warehouse.className = "warehouse";
+    // this.lineTop = document.createElement("div");
+    // this.lineTop.className = "lineTop";
+    // this.lineTop.append(this.warehouse);
+    this.lineTop = this.box.parentNode;
+    this.counter = new Counter(this.lineTop);
+  }
+
+  addSeed() {
+    let seed = new Seed(this);
+  }
 }
 
 class Seed {
@@ -219,7 +256,7 @@ class Seed {
 
 class Counter {
   constructor(parentBox) {
-    this.seeds = 0;
+    this.seeds = parseInt(0);
     this.counter = document.createElement("div");
     this.counter.className = "counter";
     this.counter.innerHTML = this.seeds;
