@@ -100,7 +100,7 @@ class Box {
   }
 }
 
-class Warehouse{
+class Warehouse {
   constructor(i) {
     let tmp = document.getElementsByClassName("warehouse");
     this.warehouse = tmp[i];
@@ -129,6 +129,8 @@ class GameBoard {
       this.addBoxs();
     }
 
+    this.setIDs();
+
     for (let i = 0; i < this.boxs.length; i++) {
       for (let j = 0; j < seeds; j++) {
         new Seed(this.boxs[i]);
@@ -155,6 +157,18 @@ class GameBoard {
     } else {
       this.boxs[1] = boxTop;
       this.boxs[2] = boxBot;
+    }
+  }
+
+  setIDs() {
+    let id = "0";
+    let box;
+    for (let i = 0; i < this.boxs.length; i++) {
+      box = this.boxs[i].box;
+      if (box.className == "box") {
+        box.id = id;
+        id++;
+      }
     }
   }
 
@@ -227,5 +241,3 @@ class Counter {
     this.counter.innerHTML = this.seeds;
   }
 }
-
-
