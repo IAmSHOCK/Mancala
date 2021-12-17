@@ -61,6 +61,7 @@ window.onclick = function (event) {
   switch (event.target.className) {
     case "box":
       game.play(event.target);
+      console.log(event.target);
   }
 };
 
@@ -96,18 +97,18 @@ class Box {
     let childs = this.box.children;
     this.box.removeChild(childs[0]);
     this.counter.reduction();
-    console.dir(this);
   }
 }
 
 class Warehouse{
-  constructor(board) {
-    this.warehouse = document.createElement("div");
-    this.warehouse.className = "warehouse";
-    this.lineTop = document.createElement("div");
-    this.lineTop.className = "lineTop";
-    this.lineTop.append(this.warehouse);
-    
+  constructor(i) {
+    let tmp = document.getElementsByClassName("warehouse");
+    this.warehouse = tmp[i];
+    // this.warehouse.className = "warehouse";
+    // this.lineTop = document.createElement("div");
+    // this.lineTop.className = "lineTop";
+    // this.lineTop.append(this.warehouse);
+    this.lineTop = this.warehouse.parentNode;
     this.seeds = [];
     this.counter = new Counter(this.lineTop);
   }
@@ -121,20 +122,20 @@ class GameBoard {
     let cavidades = select.options[select.selectedIndex].value;
     select = document.getElementById("Sementes");
     let seeds = select.options[select.selectedIndex].value;
-    // this.warehouses[0] = new Warehouse(this.board);
+    this.warehouses = [];
+    this.warehouses[0] = new Warehouse(0);
 
     for (let i = 0; i < cavidades; i++) {
       this.addBoxs();
     }
 
-    for (let i = 1; i < this.boxs.length; i++) {
+    for (let i = 0; i < this.boxs.length; i++) {
       for (let j = 0; j < seeds; j++) {
         new Seed(this.boxs[i]);
       }
     }
 
-    // this.warehouse[1] = new Warehouse(this.board);
-    console.dir(this);
+    this.warehouses[1] = new Warehouse(1);
   }
 
   updateGameBoard() {
@@ -163,6 +164,10 @@ class GameBoard {
       elements[0].parentNode.removeChild(elements[0]);
     }
     this.boxs = [];
+    elements = document.getElementsByClassName("counter");
+    while (elements.length > 0) {
+      elements[0].parentNode.removeChild(elements[0]);
+    }
   }
 
   play() {}
