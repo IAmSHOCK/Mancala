@@ -142,22 +142,35 @@ class GameBoard {
 
   play(boxDiv) {
     let id = parseInt(boxDiv.id);
+    console.log(id);
     let box = this.getBox(id);
-    let lastBox = this.boxs.length;
+    let lastBox = this.boxs.length-1;
     let numSeeds = box.size();
     box.removeSeeds();
-    id += 2; //next box
+    if(id % 2 == 0){
+      id -= 2; //next box
+    }
+    else{
+      id += 2; //next box
+    }
+    
 
     for (let i = 0; i < numSeeds; i++) {
       box = this.getBox(id);
       if (id > lastBox) {
         this.warehouses[1].addSeed();
-        id = lastBox-2;
-        console.log(this.warehouses[1].box);
-      } else if (id % 2 == 0 && id < lastBox && id >= 0) {  //top side
+        id = lastBox-1;
+      }
+      else if(id < 0){
+        this.warehouses[0].addSeed();
+        id = 1;
+      } 
+      else if (id % 2 == 0 && id < lastBox && id >= 0) {  //top side
+        console.log(box);
         box.addSeed();
         id -= 2;
-      } else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
+      } 
+      else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
         box.addSeed();
         id += 2;
       }
@@ -229,6 +242,7 @@ class Seed {
     this.seed = document.createElement("div");
     this.seed.className = "seed";
     parentBox.box.append(this.seed);
+    if(this.seed.parentElement.className == "warehouse") console.log(this.seed);
     parentBox.counter.increment();
     this.randomPos();
   }
@@ -239,12 +253,11 @@ class Seed {
     let posInfo = this.seed.parentElement.getBoundingClientRect();
     let height = posInfo.height;
     let width = posInfo.width;
-    let top = posInfo.top;
-    let left = posInfo.left;
+    let top;
+    let left;
     // console.log("parent.top = " + top);
     // console.log("parent.left = " + left);
-    const getRandom = (min, max) =>
-      Math.floor(Math.random() * (max - min) + min);
+    const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
     top = getRandom(height * minPercentage, height * maxPercentage);
     left = getRandom(width * minPercentage, width * maxPercentage);
     // console.log("top = " + top);

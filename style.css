@@ -136,7 +136,7 @@
   }
   
   .warehouse {
-    display: relative;
+    position: relative;
     border-radius: 50px;
     background-color: rgb(160, 30, 30);
     height: 400px;
