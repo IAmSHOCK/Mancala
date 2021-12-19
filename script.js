@@ -30,6 +30,11 @@ btnConfig.onclick = function () {
   modalConfig.style.display = "block";
 };
 
+submit.onclick = function () {
+  game.updateGameBoard();
+  modalConfig.style.display = "none";
+};
+
 // When the user clicks on <span> (x), close the modal
 for (let i = 0; i < span.length; i++) {
   span[i].onclick = function () {
@@ -54,8 +59,8 @@ window.onclick = function (event) {
       break;
     case "modalConfig":
       modalConfig.style.display = "none";
-      game.updateGameBoard();
       break;
+    
   }
 
   switch (event.target.className) {
@@ -68,6 +73,7 @@ window.onclick = function (event) {
 
 window.onload = function () {
   window.game = new GameBoard();
+  window.turn = "bot";
 };
 
 class GameBoard {
@@ -101,6 +107,9 @@ class GameBoard {
     let gametmp = new GameBoard();
     this.board = gametmp.board;
     this.boxs = gametmp.boxs;
+    this.warehouses = gametmp.warehouses;
+    this.warehouses[0].removeSeeds();
+    this.warehouses[1].removeSeeds();
   }
 
   addBoxs() {
@@ -131,50 +140,55 @@ class GameBoard {
   removeAll() {
     var elements = document.getElementsByClassName("lineTopBox");
     while (elements.length > 0) {
-      elements[0].parentNode.removeChild(elements[0]);
+      let parent = elements[0].parentNode;
+      parent.removeChild(elements[0]);
     }
     this.boxs = [];
     elements = document.getElementsByClassName("counter");
     while (elements.length > 0) {
-      elements[0].parentNode.removeChild(elements[0]);
+      let parent = elements[0].parentNode;
+      if(parent.className != "warehouse")
+        parent.removeChild(elements[0]);
     }
   }
 
   play(boxDiv) {
     let id = parseInt(boxDiv.id);
-    console.log(id);
-    let box = this.getBox(id);
-    let lastBox = this.boxs.length-1;
-    let numSeeds = box.size();
-    box.removeSeeds();
-    if(id % 2 == 0){
-      id -= 2; //next box
-    }
-    else{
-      id += 2; //next box
+    if((window.turn == "bot" && id % 2 == 1) || (window.turn == "top" && id % 2 == 0)){
+      let box = this.getBox(id);
+      let lastBox = this.boxs.length-1;
+      let numSeeds = box.size();
+      box.removeSeeds();
+      if(id % 2 == 0){
+        id -= 2; //next box
+      }
+      else{
+        id += 2; //next box
+      }
+      
+  
+      for (let i = 0; i < numSeeds; i++) {
+        box = this.getBox(id);
+        if (id > lastBox) {
+          this.warehouses[1].addSeed();
+          id = lastBox-1;
+        }
+        else if(id < 0){
+          this.warehouses[0].addSeed();
+          id = 1;
+        } 
+        else if (id % 2 == 0 && id < lastBox && id >= 0) {  //top side
+          box.addSeed();
+          id -= 2;
+        } 
+        else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
+          box.addSeed();
+          id += 2;
+        }
+      }
     }
     
-
-    for (let i = 0; i < numSeeds; i++) {
-      box = this.getBox(id);
-      if (id > lastBox) {
-        this.warehouses[1].addSeed();
-        id = lastBox-1;
-      }
-      else if(id < 0){
-        this.warehouses[0].addSeed();
-        id = 1;
-      } 
-      else if (id % 2 == 0 && id < lastBox && id >= 0) {  //top side
-        console.log(box);
-        box.addSeed();
-        id -= 2;
-      } 
-      else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
-        box.addSeed();
-        id += 2;
-      }
-    }
+    window.turn = (window.turn == "top") ? "bot" : "top";
   }
 
   getBox(id) {
@@ -216,6 +230,7 @@ class Box {
     }
     this.counter.reset();
   }
+  
   size() {
     return this.box.childElementCount;
   }
@@ -234,6 +249,15 @@ class Warehouse {
 
   addSeed() {
     let seed = new Seed(this);
+  }
+
+  removeSeeds() {
+    let children = this.box.children;
+    let size = children.length;
+    for (let i = 0; i < size; i++) {
+      children[0].remove();
+    }
+    this.counter.reset();
   }
 }
 
