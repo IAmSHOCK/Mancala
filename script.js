@@ -72,8 +72,9 @@ window.onclick = function (event) {
 };
 
 window.onload = function () {
+  window.turn = "Bot Side";
+
   window.game = new GameBoard();
-  window.turn = "bot";
 };
 
 class GameBoard {
@@ -86,6 +87,7 @@ class GameBoard {
     let seeds = select.options[select.selectedIndex].value;
     this.warehouses = [];
     this.warehouses[0] = new Warehouse(0);
+    this.turn = new Turn();
 
     for (let i = 0; i < cavidades; i++) {
       this.addBoxs();
@@ -110,6 +112,9 @@ class GameBoard {
     this.warehouses = gametmp.warehouses;
     this.warehouses[0].removeSeeds();
     this.warehouses[1].removeSeeds();
+    window.turn = "Bot Side";
+    this.turn.update();
+
   }
 
   addBoxs() {
@@ -153,8 +158,11 @@ class GameBoard {
   }
 
   play(boxDiv) {
+    if(this.isEmpty()) endgame();
+    else if(this.isTopEmpty() && window.turn == "Top Side") window.turn == "Bot Side";
+    else if(this.isBotEmpty() && window.turn == "Bot Side") window.turn == "Top Side";
     let id = parseInt(boxDiv.id);
-    if((window.turn == "bot" && id % 2 == 1) || (window.turn == "top" && id % 2 == 0)){
+    if((window.turn == "Bot Side" && id % 2 == 1) || (window.turn == "Top Side" && id % 2 == 0)){
       let box = this.getBox(id);
       let lastBox = this.boxs.length-1;
       let numSeeds = box.size();
@@ -177,7 +185,7 @@ class GameBoard {
           this.warehouses[0].addSeed();
           id = 1;
         } 
-        else if (id % 2 == 0 && id < lastBox && id >= 0) {  //top side
+        else if (id % 2 == 0 && id < lastBox && id >= 0) {  //Top Side side
           box.addSeed();
           id -= 2;
         } 
@@ -186,9 +194,10 @@ class GameBoard {
           id += 2;
         }
       }
+    window.turn = (window.turn == "Top Side") ? "Bot Side" : "Top Side";
+    this.turn.update();
     }
     
-    window.turn = (window.turn == "top") ? "bot" : "top";
   }
 
   getBox(id) {
@@ -198,6 +207,30 @@ class GameBoard {
       }
     }
     return null;
+  }
+
+  isEmpty(){
+    if(this.isTopEmpty() && this.isBotEmpty()) return true;
+    return false;
+  }
+
+  isTopEmpty(){
+    for (let i = 0; i < this.boxs.length; i += 2) {
+      let box = this.getBox(i);
+      if(!box.isEmpty()) return false;
+    }
+    return true;
+  }
+
+  isBotEmpty(){
+    for (let i = 1; i < this.boxs.length; i += 2) {
+      let box = this.getBox(i);
+      if(!box.isEmpty()) return false;
+    }
+  }
+
+  endgame(){
+    let winner = this.whoWon();
   }
 }
 
@@ -216,6 +249,7 @@ class Box {
     }
     line.append(this.lineTopBox);
     this.counter = new Counter(this.lineTopBox);
+    this.turn = new Turn();
   }
 
   addSeed() {
@@ -233,6 +267,11 @@ class Box {
   
   size() {
     return this.box.childElementCount;
+  }
+
+  isEmpty(){
+    if(this.size() == 0) return true;
+    return false;
   }
 }
 
@@ -266,7 +305,6 @@ class Seed {
     this.seed = document.createElement("div");
     this.seed.className = "seed";
     parentBox.box.append(this.seed);
-    if(this.seed.parentElement.className == "warehouse") console.log(this.seed);
     parentBox.counter.increment();
     this.randomPos();
   }
@@ -313,5 +351,16 @@ class Counter {
   reset() {
     this.seeds = 0;
     this.counter.innerHTML = this.seeds;
+  }
+}
+
+class Turn{
+  constructor(){
+    this.turn = document.getElementsByClassName("turn")[0];
+    this.turn.innerHTML = ("Turn: " + window.turn);
+  }
+
+  update(){
+    this.turn.innerHTML =  ("Turn: " + window.turn);
   }
 }
