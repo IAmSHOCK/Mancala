@@ -1,3 +1,9 @@
+/*TODO:
+implementar botao desistir
+*/
+
+
+
 // Get the modal
 const modalLogin = document.getElementById("modalLogin");
 const modalRegras = document.getElementById("modalRegras");
@@ -158,14 +164,13 @@ class GameBoard {
   }
 
   play(boxDiv) {
-    if(this.isEmpty()) endgame();
-    else if(this.isTopEmpty() && window.turn == "Top Side") window.turn == "Bot Side";
-    else if(this.isBotEmpty() && window.turn == "Bot Side") window.turn == "Top Side";
     let id = parseInt(boxDiv.id);
-    if((window.turn == "Bot Side" && id % 2 == 1) || (window.turn == "Top Side" && id % 2 == 0)){
+    box_if: if((window.turn == "Bot Side" && id % 2 == 1) || (window.turn == "Top Side" && id % 2 == 0)){
       let box = this.getBox(id);
+      if(box.isEmpty()) break box_if;
       let lastBox = this.boxs.length-1;
       let numSeeds = box.size();
+      
       box.removeSeeds();
       if(id % 2 == 0){
         id -= 2; //next box
@@ -174,7 +179,6 @@ class GameBoard {
         id += 2; //next box
       }
       
-  
       for (let i = 0; i < numSeeds; i++) {
         box = this.getBox(id);
         if (id > lastBox) {
@@ -185,7 +189,7 @@ class GameBoard {
           this.warehouses[0].addSeed();
           id = 1;
         } 
-        else if (id % 2 == 0 && id < lastBox && id >= 0) {  //Top Side side
+        else if (id % 2 == 0 && id < lastBox && id >= 0) {  //Top side
           box.addSeed();
           id -= 2;
         } 
@@ -194,9 +198,18 @@ class GameBoard {
           id += 2;
         }
       }
-    window.turn = (window.turn == "Top Side") ? "Bot Side" : "Top Side";
-    this.turn.update();
+      window.turn = (window.turn == "Top Side") ? "Bot Side" : "Top Side";
+      this.turn.update();
     }
+    if(this.isEmpty()) this.endgame();
+    else if(this.isTopEmpty() && window.turn == "Top Side"){
+      window.turn = "Bot Side";
+      this.turn.update();
+    } 
+    else if(this.isBotEmpty() && window.turn == "Bot Side"){
+      window.turn = "Top Side";
+      this.turn.update();
+    } 
     
   }
 
@@ -227,10 +240,22 @@ class GameBoard {
       let box = this.getBox(i);
       if(!box.isEmpty()) return false;
     }
+    return true;
   }
 
   endgame(){
     let winner = this.whoWon();
+    if(winner == "left") window.alert("left won");
+    else if(winner == "right") window.alert("right won");
+    else window.alert("It's a tie!!");
+  }
+
+  whoWon(){
+    let left = this.warehouses[0].childElementCount;
+    let right = this.warehouses[1].childElementCount;
+    if(left > right) return "left";
+    else if(right > left) return "right";
+    return "tie";
   }
 }
 
@@ -249,7 +274,6 @@ class Box {
     }
     line.append(this.lineTopBox);
     this.counter = new Counter(this.lineTopBox);
-    this.turn = new Turn();
   }
 
   addSeed() {
