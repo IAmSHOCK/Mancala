@@ -3,7 +3,12 @@ implementar botao desistir
 */
 
 
-
+const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
+function delay(n){
+  return new Promise(function(resolve){
+      setTimeout(resolve,n*1000);
+  });
+}
 // Get the modal
 const modalLogin = document.getElementById("modalLogin");
 const modalRegras = document.getElementById("modalRegras");
@@ -71,8 +76,10 @@ window.onclick = function (event) {
 
   switch (event.target.className) {
     case "box":
-      game.play(event.target);
-      // console.log(event.target);
+      if(event.target.id % 2 == 1 && window.turn == "Bot Side"){
+        game.play(event.target);
+        if(game.adversary == "CPU") game.playComputer();
+      } 
       break;
   }
 };
@@ -91,6 +98,10 @@ class GameBoard {
     let cavidades = select.options[select.selectedIndex].value;
     select = document.getElementById("Sementes");
     let seeds = select.options[select.selectedIndex].value;
+    select = document.getElementById("adversary");
+    this.adversary = select.options[select.selectedIndex].value;
+    select = document.getElementById("difficulty");
+    this.difficulty = select.options[select.selectedIndex].value;
     this.warehouses = [];
     this.warehouses[0] = new Warehouse(0);
     this.turn = new Turn();
@@ -115,6 +126,8 @@ class GameBoard {
     let gametmp = new GameBoard();
     this.board = gametmp.board;
     this.boxs = gametmp.boxs;
+    this.adversary = gametmp.adversary;
+    this.difficulty = gametmp.difficulty;
     this.warehouses = gametmp.warehouses;
     this.warehouses[0].removeSeeds();
     this.warehouses[1].removeSeeds();
@@ -257,6 +270,27 @@ class GameBoard {
     else if(right > left) return "right";
     return "tie";
   }
+
+  async playComputer(){
+    await delay(1);
+    let n;
+    let box;
+    switch(this.difficulty){
+      case "Easy":
+        do{
+          n = getRandom(0, this.boxs.length);
+          box = this.getBox(n);
+        }
+        while(n % 2 == 1 || box.size() == 0)
+        this.play(box.box);
+        break;
+      case "Medium":
+        break;
+      case "Hard":
+
+        break;
+    }
+  }
 }
 
 class Box {
@@ -343,7 +377,6 @@ class Seed {
     let left;
     // console.log("parent.top = " + top);
     // console.log("parent.left = " + left);
-    const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
     top = getRandom(height * minPercentage, height * maxPercentage);
     left = getRandom(width * minPercentage, width * maxPercentage);
     // console.log("top = " + top);
