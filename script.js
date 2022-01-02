@@ -71,7 +71,9 @@ window.onclick = function (event) {
     case "modalConfig":
       modalConfig.style.display = "none";
       break;
-    
+    case "giveUp":
+      game.giveUp();
+      break;
   }
 
   switch (event.target.className) {
@@ -133,7 +135,6 @@ class GameBoard {
     this.warehouses[1].removeSeeds();
     window.turn = "Bot Side";
     this.turn.update();
-
   }
 
   addBoxs() {
@@ -222,6 +223,7 @@ class GameBoard {
     else if(this.isBotEmpty() && window.turn == "Bot Side"){
       window.turn = "Top Side";
       this.turn.update();
+      game.playComputer();
     } 
     
   }
@@ -258,14 +260,16 @@ class GameBoard {
 
   endgame(){
     let winner = this.whoWon();
-    if(winner == "left") window.alert("left won");
-    else if(winner == "right") window.alert("right won");
+    if(winner == "left") window.alert("Top won");
+    else if(winner == "right") window.alert("Bot won");
     else window.alert("It's a tie!!");
   }
 
   whoWon(){
-    let left = this.warehouses[0].childElementCount;
-    let right = this.warehouses[1].childElementCount;
+    let left = this.warehouses[0].size();
+    let right = this.warehouses[1].size();
+    console.log("left " + left);
+    console.log("right " + right);
     if(left > right) return "left";
     else if(right > left) return "right";
     return "tie";
@@ -280,8 +284,10 @@ class GameBoard {
         do{
           n = getRandom(0, this.boxs.length);
           box = this.getBox(n);
+          if(this.isTopEmpty()) break;
         }
         while(n % 2 == 1 || box.size() == 0)
+        if(this.isTopEmpty()) break;
         this.play(box.box);
         break;
       case "Medium":
@@ -355,6 +361,10 @@ class Warehouse {
       children[0].remove();
     }
     this.counter.reset();
+  }
+
+  size(){
+    return this.box.childElementCount;
   }
 }
 
