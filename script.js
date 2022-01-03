@@ -1,5 +1,6 @@
 /*TODO:
-implementar botao desistir
+ classificaçoes
+ implementar Algoritmo bom AI
 */
 
 
@@ -78,7 +79,7 @@ window.onclick = function (event) {
 
   switch (event.target.className) {
     case "box":
-      if(event.target.id % 2 == 1 && window.turn == "Bot Side"){
+      if(event.target.id % 2 == 1 && window.turn == "Bot Side" && !window.giveUp){
         game.play(event.target);
         if(game.adversary == "CPU") game.playComputer();
       } 
@@ -87,8 +88,7 @@ window.onclick = function (event) {
 };
 
 window.onload = function () {
-  window.turn = "Bot Side";
-
+  window.giveUp = false;
   window.game = new GameBoard();
 };
 
@@ -100,12 +100,14 @@ class GameBoard {
     let cavidades = select.options[select.selectedIndex].value;
     select = document.getElementById("Sementes");
     let seeds = select.options[select.selectedIndex].value;
-    select = document.getElementById("adversary");
+    select = document.getElementById("Adversary");
     this.adversary = select.options[select.selectedIndex].value;
-    select = document.getElementById("difficulty");
+    select = document.getElementById("Difficulty");
     this.difficulty = select.options[select.selectedIndex].value;
     this.warehouses = [];
     this.warehouses[0] = new Warehouse(0);
+    select = document.getElementById("Turn");
+    window.turn = (select.options[select.selectedIndex].value == "Eu") ? "Bot Side" : "Top Side";
     this.turn = new Turn();
 
     for (let i = 0; i < cavidades; i++) {
@@ -121,6 +123,7 @@ class GameBoard {
     }
 
     this.warehouses[1] = new Warehouse(1);
+    if(window.turn == "Top Side") this.playComputer();
   }
 
   updateGameBoard() {
@@ -133,8 +136,8 @@ class GameBoard {
     this.warehouses = gametmp.warehouses;
     this.warehouses[0].removeSeeds();
     this.warehouses[1].removeSeeds();
-    window.turn = "Bot Side";
-    this.turn.update();
+    this.turn = gametmp.turn;
+    window.giveUp = false;
   }
 
   addBoxs() {
@@ -296,6 +299,12 @@ class GameBoard {
 
         break;
     }
+  }
+  giveUp(){
+    /*if(window.turn == "Top Side") window.alert("Top Side gave up");
+    else window.alert("Bot Side gave up");*/
+    window.alert("Top Side won, Bot Side gave up");
+    window.giveUp = true;
   }
 }
 
