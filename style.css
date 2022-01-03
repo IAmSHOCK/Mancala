@@ -167,30 +167,9 @@
   }
 
   .submit{
-    margin-top: 25px;
+    margin-top: 10px;
     margin-left: auto;
     margin-right: 5px;
-    border: 0;
-    line-height: 4;
-    padding: 0 20px;
-    font-size: 1rem;
-    text-align: center;
-    color: #fff;
-    text-shadow: 1px 1px 1px #000;
-    border-radius: 10px;
-    background-color: rgba(220, 0, 0, 1);
-    background-image: linear-gradient(
-      to top left,
-      rgba(0, 0, 0, 0.2),
-      rgba(0, 0, 0, 0.2) 30%,
-      rgba(0, 0, 0, 0)
-    );
-    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6),
-      inset -2px -2px 3px rgba(0, 0, 0, 0.6);
-  }
-
-  .submit:hover {
-    background-color: rgba(255, 0, 0, 1);
   }
   
   .turn{
@@ -206,7 +185,18 @@
     align-items: center;
   }
 
-  .turnParent{
+  .parent-turn{
     margin-top: 30px;
     margin-left: 30px;
+  }
+
+  .parent-login{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+  }
+
+  .label{
+    display: inline-block;
+    width: 5px;
   }

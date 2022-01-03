@@ -1,6 +1,7 @@
 /*TODO:
- classificaçoes
- implementar Algoritmo bom AI
+  login
+  classificaçoes
+  implementar Algoritmo bom AI
 */
 
 
@@ -79,7 +80,7 @@ window.onclick = function (event) {
 
   switch (event.target.className) {
     case "box":
-      if(event.target.id % 2 == 1 && window.turn == "Bot Side" && !window.giveUp){
+      if(event.target.id % 2 == 1 && window.turn == "Bot Side" && !window.stopGame){
         game.play(event.target);
         if(game.adversary == "CPU") game.playComputer();
       } 
@@ -88,7 +89,7 @@ window.onclick = function (event) {
 };
 
 window.onload = function () {
-  window.giveUp = false;
+  window.stopGame = false;
   window.game = new GameBoard();
 };
 
@@ -137,7 +138,7 @@ class GameBoard {
     this.warehouses[0].removeSeeds();
     this.warehouses[1].removeSeeds();
     this.turn = gametmp.turn;
-    window.giveUp = false;
+    window.stopGame = false;
   }
 
   addBoxs() {
@@ -261,18 +262,18 @@ class GameBoard {
     return true;
   }
 
-  endgame(){
+  async endgame(){
+    await delay(0.5);
     let winner = this.whoWon();
     if(winner == "left") window.alert("Top won");
     else if(winner == "right") window.alert("Bot won");
     else window.alert("It's a tie!!");
+    window.stopGame = true;
   }
 
   whoWon(){
     let left = this.warehouses[0].size();
     let right = this.warehouses[1].size();
-    console.log("left " + left);
-    console.log("right " + right);
     if(left > right) return "left";
     else if(right > left) return "right";
     return "tie";
@@ -304,7 +305,7 @@ class GameBoard {
     /*if(window.turn == "Top Side") window.alert("Top Side gave up");
     else window.alert("Bot Side gave up");*/
     window.alert("Top Side won, Bot Side gave up");
-    window.giveUp = true;
+    window.stopGame = true;
   }
 }
 
