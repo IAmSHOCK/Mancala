@@ -4,7 +4,6 @@
   implementar Algoritmo bom AI
 */
 
-
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
 function delay(n){
   return new Promise(function(resolve){
@@ -46,6 +45,21 @@ btnConfig.onclick = function () {
 submit.onclick = function () {
   game.updateGameBoard();
   modalConfig.style.display = "none";
+};
+
+login.onclick = function () {
+  
+};
+
+
+register.onclick = function () {
+  let user =  document.getElementById("username").value;
+  let pw =  document.getElementById("pw").value;
+  let file = new File()
+  let reader = new FileReader();
+  reader.readAsText("login.json");
+  console.log(reader.result);
+  
 };
 
 // When the user clicks on <span> (x), close the modal
