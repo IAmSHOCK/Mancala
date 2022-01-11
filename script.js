@@ -55,12 +55,21 @@ login.onclick = function () {
 register.onclick = function () {
   let user =  document.getElementById("username").value;
   let pw =  document.getElementById("pw").value;
-  let file = new File()
-  let reader = new FileReader();
-  reader.readAsText("login.json");
-  console.log(reader.result);
+  let file = getFile("superheroes.json");
+  console.log(file);
   
 };
+
+async function getFile(file){//nao funfa
+  let jsdata;
+  fetch('./superheroes.json')
+  .then(response => response.json())
+  .then(data => jsdata=data)
+  .catch(error => console.log(error));
+  return jsdata;
+};
+
+
 
 // When the user clicks on <span> (x), close the modal
 for (let i = 0; i < span.length; i++) {
@@ -106,6 +115,25 @@ window.onload = function () {
   window.stopGame = false;
   window.game = new GameBoard();
 };
+
+class User{
+  constructor(user, pw){
+    let userExists = this.exists(user);
+    if(userExists){
+      this.showUserErr(user);
+    }
+
+  }
+
+  exists(user){
+
+  }
+
+  showUserErr(){
+
+  }
+
+}
 
 class GameBoard {
   constructor() {
