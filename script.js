@@ -169,7 +169,8 @@ window.showUsername = function(user){
   let div = document.createElement("div");
   let top = document.getElementsByClassName("top")[0];
   div.innerHTML = ("Logged in as: " + user.name);
-  top.insertBefore(div, top.firstChild);
+  let children = top.children;
+  top.insertBefore(div, children[1]);
 }
 
 class User{
