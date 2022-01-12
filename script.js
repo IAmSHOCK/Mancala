@@ -4,6 +4,7 @@
   implementar Algoritmo bom AI
 */
 
+
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
 function delay(n){
   return new Promise(function(resolve){
@@ -36,7 +37,13 @@ btnRegras.onclick = function () {
 
 btnClass.onclick = function () {
   modalClass.style.display = "block";
+  let classDiv = document.getElementsByClassName("classificacoes")[0];
+  getTop10(classDiv);
 };
+
+function getTop10(div){
+  //ir a um ficheiro json buscar os maiores top10 classificados em vitorias
+}
 
 btnConfig.onclick = function () {
   modalConfig.style.display = "block";
@@ -47,28 +54,61 @@ submit.onclick = function () {
   modalConfig.style.display = "none";
 };
 
+
+
 login.onclick = function () {
-  
-};
-
-
-register.onclick = function () {
   let user =  document.getElementById("username").value;
   let pw =  document.getElementById("pw").value;
-  let file = getFile("superheroes.json");
-  console.log(file);
   
+  let newUser = new User(user, pw);  
 };
 
-async function getFile(file){//nao funfa
-  let jsdata;
-  fetch('./superheroes.json')
-  .then(response => response.json())
-  .then(data => jsdata=data)
-  .catch(error => console.log(error));
-  return jsdata;
-};
+function isObjectEmpty(obj) {     
+    for (const i in obj) return false;      
+    return true; 
+}
 
+function sendRequest(obj,command, user){ 
+  const xhr = new XMLHttpRequest();
+  let server = "twserver.alunos.dcc.fc.up.pt"
+  xhr.open('POST','http://'+server+':'+8008+'/'+command,true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState < 4) return;
+    let data=JSON.parse(xhr.responseText);
+    switch (command) {
+      case "join":
+        preJoin(data);
+        break;
+      case "leave":
+        preLeave(data);
+        break;
+      case "notify":
+        preNotify(data);
+        break;
+      case "ranking":
+        preRanking(data);
+        break;
+      case "register":
+        checkRegister(data, user);
+        break;
+      case "update":
+        preUpdate(data); 
+        break;
+    }           
+  }  
+  xhr.send(JSON.stringify(obj));
+}
+
+function checkRegister(data, user){
+  if (isObjectEmpty(data)){
+    console.log("Registo sucedido");
+    user.login();
+  }
+  if (data.error=="User registered with a different password"){
+      isLogged = false;
+      user.wrongLogin();
+  }
+}
 
 
 // When the user clicks on <span> (x), close the modal
@@ -116,23 +156,44 @@ window.onload = function () {
   window.game = new GameBoard();
 };
 
+window.hideLogin = function(){
+
+  let btn = document.getElementById("btnLogin");
+  btn.style.display = "none";
+  btn.zIndex=-1;
+
+  modalLogin.style.display = "none";
+};
+
+window.showUsername = function(user){
+  let div = document.createElement("div");
+  let top = document.getElementsByClassName("top")[0];
+  div.innerHTML = ("Logged in as: " + user.name);
+  top.insertBefore(div, top.firstChild);
+}
+
 class User{
   constructor(user, pw){
-    let userExists = this.exists(user);
-    if(userExists){
-      this.showUserErr(user);
-    }
-
+    let data = {'nick': user, 'password': pw};
+    this.isLoggedIn = false;
+    this.name = user;
+    this.pw = pw;
+	  sendRequest(data, "register", this);    
   }
 
-  exists(user){
-
+  
+  login(){
+    alert("Login bem sucedido.")
+    this.isLoggedIn=true;
+    window.hideLogin();
+    window.showUsername(this)
+    
   }
 
-  showUserErr(){
+  wrongLogin(){
+    alert("Palavra passe errada.");
 
   }
-
 }
 
 class GameBoard {
