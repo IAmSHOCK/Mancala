@@ -10,7 +10,13 @@ function delay(n){
   return new Promise(function(resolve){
       setTimeout(resolve,n*1000);
   });
+
+  
 }
+
+var main_user;
+
+
 // Get the modal
 const modalLogin = document.getElementById("modalLogin");
 const modalRegras = document.getElementById("modalRegras");
@@ -60,7 +66,7 @@ login.onclick = function () {
   let user =  document.getElementById("username").value;
   let pw =  document.getElementById("pw").value;
   
-  let newUser = new User(user, pw);  
+  main_user = new User(user, pw);  
 };
 
 function isObjectEmpty(obj) {     
@@ -105,7 +111,7 @@ function checkRegister(data, user){
     user.login();
   }
   if (data.error=="User registered with a different password"){
-      isLogged = false;
+      isLoggedin = false;
       user.wrongLogin();
   }
 }
@@ -370,7 +376,7 @@ class GameBoard {
     await delay(0.5);
     let winner = this.whoWon();
     if(winner == "left") window.alert("Top won");
-    else if(winner == "right") window.alert("Bot won");
+    else if(winner == "right" && isLoggedIn) window.alert("Bot won");
     else window.alert("It's a tie!!");
     window.stopGame = true;
   }
