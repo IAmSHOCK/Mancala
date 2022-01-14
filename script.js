@@ -16,7 +16,9 @@ function delay(n){
 
 var main_user;
 var game_code;
+var isLoggedIn = false;
 const group_id = 55;
+var eventSource;
 
 // Get the modal
 const modalLogin = document.getElementById("modalLogin");
@@ -50,7 +52,7 @@ btnClass.onclick = function () {
 
 function getTop10(){
   //ir a um ficheiro json buscar os maiores top10 classificados em vitorias
-  sendRequest(null, "ranking");
+  window.game.sendRequest(null, "ranking");
 }
 
 function addToClass(data){
@@ -113,88 +115,7 @@ function isObjectEmpty(obj) {
     return true; 
 }
 
-function sendRequest(obj,command){ 
-  const xhr = new XMLHttpRequest();
-  let server = "twserver.alunos.dcc.fc.up.pt"
-  xhr.open('POST','http://'+server+':'+8008+'/'+command,true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState < 4) return;
-    let data=JSON.parse(xhr.responseText);
-    switch (command) {
-      case "join":
-        checkJoin(data);
-        break;
-      case "leave":
-        preLeave(data);
-        break;
-      case "notify":
-        checkNotify(data);
-        break;
-      case "ranking":
-        checkRanking(data);
-        break;
-      case "register":
-        checkRegister(data);
-        break;
-      case "update":
-        checkUpdate(data); 
-        break;
-    }           
-  }  
-  xhr.send(JSON.stringify(obj));
-}
 
-function checkRegister(data){
-  if (isObjectEmpty(data)){
-    console.log("Registo sucedido");
-    main_user.login();
-  }
-  if (data.error=="User registered with a different password"){
-      isLoggedin = false;
-      main_user.wrongLogin();
-  }
-}
-
-function checkRanking(data){
-  if(isObjectEmpty(data)) alert("Error checkRanking");
-  else{
-    addToClass(data)
-  } 
-}
-
-function checkJoin(data){
-  if(isObjectEmpty(data)) alert("Error: in checkJoin, data is empty.");
-  else{
-    if(data.hasOwnProperty("game")){
-      gameCode = data.game;
-      alert("You entered in a game.");
-      openServer();
-    }
-    else alert("Error: data doesn't have property game.")
-}
-
-function openServer(){
-	if(!isLogged){
-    alert("Please login first.");
-    return;
-  }
-  let server = "twserver.alunos.dcc.fc.up.pt"
-  eventSource = new EventSource('http://'+server+':'+'8008'+'/update?nick='+encodeURIComponent(main_user.nick)+'&game='+encodeURIComponent(gameHash));
-
-  eventSource.onmessage = function(event){
-		const data = JSON.parse(event.data);
-    console.log(data);
-		const sides = data.board.sides;POST
-		seedPos = 0;
-		let k = Object.keys(sides)[0];
-		console.log(k);
-		translateBoard(sides, k);
-		k = Object.keys(sides)[1];
-		console.log(k);
-		translateBoard(sides, k);
-
-
-}
 
 
 // When the user clicks on <span> (x), close the modal
@@ -262,16 +183,15 @@ window.showUsername = function(user){
 class User{
   constructor(user, pw){
     this.data = {'nick': user, 'password': pw};
-    this.isLoggedIn = false;
     this.name = user;
     this.pw = pw;
-	  sendRequest(this.data, "register", this);    
+	  window.game.sendRequest(this.data, "register", this);    
   }
 
   
   login(){
     alert("Login bem sucedido.")
-    this.isLoggedIn=true;
+    isLoggedIn=true;
     window.hideLogin();
     window.showUsername(this)
   }
@@ -315,8 +235,16 @@ class GameBoard {
       }
     }
 
+    if(this.adversary == "Player" && isLoggedIn){
+      let obj = {"group": 55, "nick": main_user.name, "password": main_user.pw, "size": cavidades, "initial": seeds};
+      this.sendRequest(obj, "join")
+    }
+    else if(this.adversary == "Player"){
+      alert("Login first!");
+    } 
+
     this.warehouses[1] = new Warehouse(1);
-    if(window.turn == "Top Side") this.playComputer();
+    if(window.turn == "Top Side" && this.adversary=="CPU") this.playComputer();
   }
 
   updateGameBoard() {
@@ -493,12 +421,110 @@ class GameBoard {
         break;
     }
   }
+
+    checkRegister(data){
+      if (isObjectEmpty(data)){
+        console.log("Registo sucedido");
+        main_user.login();
+      }
+      if (data.error=="User registered with a different password"){
+          isLoggedin = false;
+          main_user.wrongLogin();
+      }
+    }
+    
+    checkRanking(data){
+      if(isObjectEmpty(data)) alert("Error checkRanking");
+      else{
+        addToClass(data);
+      } 
+    }
+    
+    checkJoin(data){
+      if(isObjectEmpty(data)) alert("Error: in checkJoin, data is empty.");
+      else{
+        if(data.hasOwnProperty("game")){
+          game_code = data.game;
+          alert("You entered in a game.");
+          this.openServer();
+          console.log(data);
+        }
+        else alert("Error: data doesn't have property game.")
+      }
+    }
+
+    checkLeave(data){
+      if (isObjectEmpty(data)){
+        eventSource.close();
+        console.log("Player left.");
+        alert("You left the game.");
+      }
+      else{
+        console.log(data);
+        alert("Error: in checkLeave");
+      }
+    }
+    
+    openServer(){//not finished
+    
+      if(!isLoggedIn){
+        alert("Please login first.");
+        return;
+      }
+      let server = "twserver.alunos.dcc.fc.up.pt"
+      eventSource = new EventSource('http://'+server+':'+'8008'+'/update?nick='+encodeURIComponent(main_user.name)+'&game='+encodeURIComponent(game_code));
+    
+      eventSource.onmessage = function(event){//ler o que o outro jogador jogou
+        let data = JSON.parse(event.data);
+        console.log(data);
+      }
+    
+    }
+
   giveUp(){
     /*if(window.turn == "Top Side") window.alert("Top Side gave up");
     else window.alert("Bot Side gave up");*/
+    this.leave();
     window.alert("Top Side won, Bot Side gave up");
     window.stopGame = true;
   }
+
+  sendRequest(obj,command){ 
+    const xhr = new XMLHttpRequest();
+    let server = "twserver.alunos.dcc.fc.up.pt"
+    xhr.open('POST','http://'+server+':'+8008+'/'+command,true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState < 4) return;
+      let data=JSON.parse(xhr.responseText);
+      switch (command) {
+        case "join":
+          window.game.checkJoin(data);
+          break;
+        case "leave":
+          window.game.checkLeave(data);
+          break;
+        case "notify":
+          window.game.checkNotify(data);
+          break;
+        case "ranking":
+          window.game.checkRanking(data);
+          break;
+        case "register":
+          window.game.checkRegister(data);
+          break;
+        case "update":
+          window.game.checkUpdate(data); 
+          break;
+      }           
+    }  
+    xhr.send(JSON.stringify(obj));
+  }
+
+  leave(){
+    let data = {'game': game_code, 'nick': main_user.name, 'password': main_user.pw};
+    this.sendRequest(data,"leave");
+  }
+
 }
 
 class Box {
