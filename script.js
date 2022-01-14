@@ -302,53 +302,59 @@ class GameBoard {
   }
 
   play(boxDiv) {
-    let id = parseInt(boxDiv.id);
-    box_if: if((window.turn == "Bot Side" && id % 2 == 1) || (window.turn == "Top Side" && id % 2 == 0)){
-      let box = this.getBox(id);
-      if(box.isEmpty()) break box_if;
-      let lastBox = this.boxs.length-1;
-      let numSeeds = box.size();
-      
-      box.removeSeeds();
-      if(id % 2 == 0){
-        id -= 2; //next box
-      }
-      else{
-        id += 2; //next box
-      }
-      
-      for (let i = 0; i < numSeeds; i++) {
-        box = this.getBox(id);
-        if (id > lastBox) {
-          this.warehouses[1].addSeed();
-          id = lastBox-1;
+    if(this.adversary == "CPU"){
+      let id = parseInt(boxDiv.id);
+      box_if: if((window.turn == "Bot Side" && id % 2 == 1) || (window.turn == "Top Side" && id % 2 == 0)){
+        let box = this.getBox(id);
+        if(box.isEmpty()) break box_if;
+        let lastBox = this.boxs.length-1;
+        let numSeeds = box.size();
+        
+        box.removeSeeds();
+        if(id % 2 == 0){
+          id -= 2; //next box
         }
-        else if(id < 0){
-          this.warehouses[0].addSeed();
-          id = 1;
-        } 
-        else if (id % 2 == 0 && id < lastBox && id >= 0) {  //Top side
-          box.addSeed();
-          id -= 2;
-        } 
-        else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
-          box.addSeed();
-          id += 2;
+        else{
+          id += 2; //next box
         }
+        
+        for (let i = 0; i < numSeeds; i++) {
+          box = this.getBox(id);
+          if (id > lastBox) {
+            this.warehouses[1].addSeed();
+            id = lastBox-1;
+          }
+          else if(id < 0){
+            this.warehouses[0].addSeed();
+            id = 1;
+          } 
+          else if (id % 2 == 0 && id < lastBox && id >= 0) {  //Top side
+            box.addSeed();
+            id -= 2;
+          } 
+          else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
+            box.addSeed();
+            id += 2;
+          }
+        }
+        window.turn = (window.turn == "Top Side") ? "Bot Side" : "Top Side";
+        this.turn.update();
       }
-      window.turn = (window.turn == "Top Side") ? "Bot Side" : "Top Side";
-      this.turn.update();
+      if(this.isEmpty()) this.endgame();
+      else if(this.isTopEmpty() && window.turn == "Top Side"){
+        window.turn = "Bot Side";
+        this.turn.update();
+      } 
+      else if(this.isBotEmpty() && window.turn == "Bot Side"){
+        window.turn = "Top Side";
+        this.turn.update();
+        game.playComputer();
+      }       
     }
-    if(this.isEmpty()) this.endgame();
-    else if(this.isTopEmpty() && window.turn == "Top Side"){
-      window.turn = "Bot Side";
-      this.turn.update();
-    } 
-    else if(this.isBotEmpty() && window.turn == "Bot Side"){
-      window.turn = "Top Side";
-      this.turn.update();
-      game.playComputer();
-    } 
+    else{
+      let id = parseInt(boxDiv.id);
+
+    }
     
   }
 
@@ -485,7 +491,6 @@ class GameBoard {
     /*if(window.turn == "Top Side") window.alert("Top Side gave up");
     else window.alert("Bot Side gave up");*/
     this.leave();
-    window.alert("Top Side won, Bot Side gave up");
     window.stopGame = true;
   }
 
