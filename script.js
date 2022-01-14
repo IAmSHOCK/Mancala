@@ -43,12 +43,50 @@ btnRegras.onclick = function () {
 
 btnClass.onclick = function () {
   modalClass.style.display = "block";
-  let classDiv = document.getElementsByClassName("classificacoes")[0];
-  getTop10(classDiv);
+  getTop10();
+  
 };
 
-function getTop10(div){
+function getTop10(){
   //ir a um ficheiro json buscar os maiores top10 classificados em vitorias
+  sendRequest(null, "ranking");
+}
+
+function addToClass(data){
+  let classDiv = document.getElementsByClassName("classificacoes")[0];
+  createTable(classDiv, data.ranking);
+  
+}
+
+function createTable(parent, data){
+  let mytable = document.createElement("table");
+  generateTableHead(mytable, data);
+  generateTable(mytable, data);
+  parent.appendChild(mytable);
+}
+
+function generateTableHead(table, data) {
+  let thead = table.createTHead();
+  let row = thead.insertRow();
+  
+  let keys = Object.keys(data[0]);
+  for (let key of keys) {
+    let th = document.createElement("th");
+    let text = document.createTextNode(key);
+    th.appendChild(text);
+    row.appendChild(th);
+  }
+}
+
+function generateTable(table, data) {
+  for (let element of data) {
+    let row = table.insertRow();
+    for (key in element) {
+      let cell = row.insertCell();
+      let text = document.createTextNode(element[key]);
+      cell.appendChild(text);
+    }
+  }
 }
 
 btnConfig.onclick = function () {
@@ -74,7 +112,7 @@ function isObjectEmpty(obj) {
     return true; 
 }
 
-function sendRequest(obj,command, user){ 
+function sendRequest(obj,command){ 
   const xhr = new XMLHttpRequest();
   let server = "twserver.alunos.dcc.fc.up.pt"
   xhr.open('POST','http://'+server+':'+8008+'/'+command,true);
@@ -92,10 +130,10 @@ function sendRequest(obj,command, user){
         preNotify(data);
         break;
       case "ranking":
-        preRanking(data);
+        checkRanking(data);
         break;
       case "register":
-        checkRegister(data, user);
+        checkRegister(data);
         break;
       case "update":
         preUpdate(data); 
@@ -105,15 +143,22 @@ function sendRequest(obj,command, user){
   xhr.send(JSON.stringify(obj));
 }
 
-function checkRegister(data, user){
+function checkRegister(data){
   if (isObjectEmpty(data)){
     console.log("Registo sucedido");
-    user.login();
+    main_user.login();
   }
   if (data.error=="User registered with a different password"){
       isLoggedin = false;
-      user.wrongLogin();
+      main_user.wrongLogin();
   }
+}
+
+function checkRanking(data){
+  if(isObjectEmpty(data)) alert("Error checkRanking");
+  else{
+    addToClass(data)
+  } 
 }
 
 
@@ -181,11 +226,11 @@ window.showUsername = function(user){
 
 class User{
   constructor(user, pw){
-    let data = {'nick': user, 'password': pw};
+    this.data = {'nick': user, 'password': pw};
     this.isLoggedIn = false;
     this.name = user;
     this.pw = pw;
-	  sendRequest(data, "register", this);    
+	  sendRequest(this.data, "register", this);    
   }
 
   
@@ -194,12 +239,14 @@ class User{
     this.isLoggedIn=true;
     window.hideLogin();
     window.showUsername(this)
-    
   }
 
   wrongLogin(){
     alert("Palavra passe errada.");
+  }
 
+  getUserJSON(){
+    return this.data;
   }
 }
 
