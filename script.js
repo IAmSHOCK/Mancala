@@ -15,7 +15,8 @@ function delay(n){
 }
 
 var main_user;
-
+var game_code;
+const group_id = 55;
 
 // Get the modal
 const modalLogin = document.getElementById("modalLogin");
@@ -121,13 +122,13 @@ function sendRequest(obj,command){
     let data=JSON.parse(xhr.responseText);
     switch (command) {
       case "join":
-        preJoin(data);
+        checkJoin(data);
         break;
       case "leave":
         preLeave(data);
         break;
       case "notify":
-        preNotify(data);
+        checkNotify(data);
         break;
       case "ranking":
         checkRanking(data);
@@ -136,7 +137,7 @@ function sendRequest(obj,command){
         checkRegister(data);
         break;
       case "update":
-        preUpdate(data); 
+        checkUpdate(data); 
         break;
     }           
   }  
@@ -159,6 +160,40 @@ function checkRanking(data){
   else{
     addToClass(data)
   } 
+}
+
+function checkJoin(data){
+  if(isObjectEmpty(data)) alert("Error: in checkJoin, data is empty.");
+  else{
+    if(data.hasOwnProperty("game")){
+      gameCode = data.game;
+      alert("You entered in a game.");
+      openServer();
+    }
+    else alert("Error: data doesn't have property game.")
+}
+
+function openServer(){
+	if(!isLogged){
+    alert("Please login first.");
+    return;
+  }
+  let server = "twserver.alunos.dcc.fc.up.pt"
+  eventSource = new EventSource('http://'+server+':'+'8008'+'/update?nick='+encodeURIComponent(main_user.nick)+'&game='+encodeURIComponent(gameHash));
+
+  eventSource.onmessage = function(event){
+		const data = JSON.parse(event.data);
+    console.log(data);
+		const sides = data.board.sides;POST
+		seedPos = 0;
+		let k = Object.keys(sides)[0];
+		console.log(k);
+		translateBoard(sides, k);
+		k = Object.keys(sides)[1];
+		console.log(k);
+		translateBoard(sides, k);
+
+
 }
 
 
