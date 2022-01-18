@@ -453,6 +453,7 @@ class GameBoard {
           game_code = data.game;
           alert("You entered in a game.");
           this.openServer();
+          console.log("checkJoing data: ");
           console.log(data);
         }
         else alert("Error: data doesn't have property game.")
@@ -482,7 +483,12 @@ class GameBoard {
     
       eventSource.onmessage = function(event){//ler o que o outro jogador jogou
         let data = JSON.parse(event.data);
-        console.log(data);
+        if(data.board.turn == main_user.name){
+          alert("You're first, you play in the top side.")
+          
+        } 
+        //console.log("openServer data: ");
+        //console.log(data);
       }
     
     }
