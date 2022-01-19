@@ -4,14 +4,11 @@
   implementar Algoritmo bom AI
 */
 
-
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min);
-function delay(n){
-  return new Promise(function(resolve){
-      setTimeout(resolve,n*1000);
+function delay(n) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, n * 1000);
   });
-
-  
 }
 
 var main_user;
@@ -47,21 +44,19 @@ btnRegras.onclick = function () {
 btnClass.onclick = function () {
   modalClass.style.display = "block";
   getTop10();
-  
 };
 
-function getTop10(){
+function getTop10() {
   //ir a um ficheiro json buscar os maiores top10 classificados em vitorias
   window.game.sendRequest(null, "ranking");
 }
 
-function addToClass(data){
+function addToClass(data) {
   let classDiv = document.getElementsByClassName("classificacoes")[0];
   createTable(classDiv, data.ranking);
-  
 }
 
-function createTable(parent, data){
+function createTable(parent, data) {
   let mytable = document.createElement("table");
   generateTableHead(mytable, data);
   generateTable(mytable, data);
@@ -71,7 +66,7 @@ function createTable(parent, data){
 function generateTableHead(table, data) {
   let thead = table.createTHead();
   let row = thead.insertRow();
-  
+
   let keys = Object.keys(data[0]);
   for (let key of keys) {
     let th = document.createElement("th");
@@ -101,22 +96,17 @@ submit.onclick = function () {
   modalConfig.style.display = "none";
 };
 
-
-
 login.onclick = function () {
-  let user =  document.getElementById("username").value;
-  let pw =  document.getElementById("pw").value;
-  
-  main_user = new User(user, pw);  
+  let user = document.getElementById("username").value;
+  let pw = document.getElementById("pw").value;
+
+  main_user = new User(user, pw);
 };
 
-function isObjectEmpty(obj) {     
-    for (const i in obj) return false;      
-    return true; 
+function isObjectEmpty(obj) {
+  for (const i in obj) return false;
+  return true;
 }
-
-
-
 
 // When the user clicks on <span> (x), close the modal
 for (let i = 0; i < span.length; i++) {
@@ -150,10 +140,14 @@ window.onclick = function (event) {
 
   switch (event.target.className) {
     case "box":
-      if(event.target.id % 2 == 1 && window.turn == "Bot Side" && !window.stopGame){
+      if (
+        event.target.id % 2 == 1 &&
+        window.turn == "Bot Side" &&
+        !window.stopGame
+      ) {
         game.play(event.target);
-        if(game.adversary == "CPU") game.playComputer();
-      } 
+        if (game.adversary == "CPU") game.playComputer();
+      }
       break;
   }
 };
@@ -163,44 +157,42 @@ window.onload = function () {
   window.game = new GameBoard();
 };
 
-window.hideLogin = function(){
-
+window.hideLogin = function () {
   let btn = document.getElementById("btnLogin");
   btn.style.display = "none";
-  btn.zIndex=-1;
+  btn.zIndex = -1;
 
   modalLogin.style.display = "none";
 };
 
-window.showUsername = function(user){
+window.showUsername = function (user) {
   let div = document.createElement("div");
   let top = document.getElementsByClassName("top")[0];
-  div.innerHTML = ("Logged in as: " + user.name);
+  div.innerHTML = "Logged in as: " + user.name;
   let children = top.children;
   top.insertBefore(div, children[1]);
-}
+};
 
-class User{
-  constructor(user, pw){
-    this.data = {'nick': user, 'password': pw};
+class User {
+  constructor(user, pw) {
+    this.data = { nick: user, password: pw };
     this.name = user;
     this.pw = pw;
-	  window.game.sendRequest(this.data, "register", this);    
+    window.game.sendRequest(this.data, "register", this);
   }
 
-  
-  login(){
-    alert("Login bem sucedido.")
-    isLoggedIn=true;
+  login() {
+    alert("Login bem sucedido.");
+    isLoggedIn = true;
     window.hideLogin();
-    window.showUsername(this)
+    window.showUsername(this);
   }
 
-  wrongLogin(){
+  wrongLogin() {
     alert("Palavra passe errada.");
   }
 
-  getUserJSON(){
+  getUserJSON() {
     return this.data;
   }
 }
@@ -220,7 +212,10 @@ class GameBoard {
     this.warehouses = [];
     this.warehouses[0] = new Warehouse(0);
     select = document.getElementById("Turn");
-    window.turn = (select.options[select.selectedIndex].value == "Eu") ? "Bot Side" : "Top Side";
+    window.turn =
+      select.options[select.selectedIndex].value == "Eu"
+        ? "Bot Side"
+        : "Top Side";
     this.turn = new Turn();
 
     for (let i = 0; i < cavidades; i++) {
@@ -235,16 +230,22 @@ class GameBoard {
       }
     }
 
-    if(this.adversary == "Player" && isLoggedIn){
-      let obj = {"group": 55, "nick": main_user.name, "password": main_user.pw, "size": cavidades, "initial": seeds};
-      this.sendRequest(obj, "join")
-    }
-    else if(this.adversary == "Player"){
+    if (this.adversary == "Player" && isLoggedIn) {
+      let obj = {
+        group: 55,
+        nick: main_user.name,
+        password: main_user.pw,
+        size: cavidades,
+        initial: seeds,
+      };
+      this.sendRequest(obj, "join");
+    } else if (this.adversary == "Player") {
       alert("Login first!");
-    } 
+    }
 
     this.warehouses[1] = new Warehouse(1);
-    if(window.turn == "Top Side" && this.adversary=="CPU") this.playComputer();
+    if (window.turn == "Top Side" && this.adversary == "CPU")
+      this.playComputer();
   }
 
   updateGameBoard() {
@@ -259,6 +260,12 @@ class GameBoard {
     this.warehouses[1].removeSeeds();
     this.turn = gametmp.turn;
     window.stopGame = false;
+  }
+
+  updateGameBoardMP(data){
+    this.removeAll();
+    let gametmp = new GameBoard();
+    
   }
 
   addBoxs() {
@@ -296,66 +303,67 @@ class GameBoard {
     elements = document.getElementsByClassName("counter");
     while (elements.length > 0) {
       let parent = elements[0].parentNode;
-      if(parent.className != "warehouse")
-        parent.removeChild(elements[0]);
+      if (parent.className != "warehouse") parent.removeChild(elements[0]);
     }
   }
 
   play(boxDiv) {
-    if(this.adversary == "CPU"){
+    if (this.adversary == "CPU") {
       let id = parseInt(boxDiv.id);
-      box_if: if((window.turn == "Bot Side" && id % 2 == 1) || (window.turn == "Top Side" && id % 2 == 0)){
+      box_if: if (
+        (window.turn == "Bot Side" && id % 2 == 1) ||
+        (window.turn == "Top Side" && id % 2 == 0)
+      ) {
         let box = this.getBox(id);
-        if(box.isEmpty()) break box_if;
-        let lastBox = this.boxs.length-1;
+        if (box.isEmpty()) break box_if;
+        let lastBox = this.boxs.length - 1;
         let numSeeds = box.size();
-        
+
         box.removeSeeds();
-        if(id % 2 == 0){
+        if (id % 2 == 0) {
           id -= 2; //next box
-        }
-        else{
+        } else {
           id += 2; //next box
         }
-        
+
         for (let i = 0; i < numSeeds; i++) {
           box = this.getBox(id);
           if (id > lastBox) {
             this.warehouses[1].addSeed();
-            id = lastBox-1;
-          }
-          else if(id < 0){
+            id = lastBox - 1;
+          } else if (id < 0) {
             this.warehouses[0].addSeed();
             id = 1;
-          } 
-          else if (id % 2 == 0 && id < lastBox && id >= 0) {  //Top side
+          } else if (id % 2 == 0 && id < lastBox && id >= 0) {
+            //Top side
             box.addSeed();
             id -= 2;
-          } 
-          else if (id % 2 == 1 && id <= lastBox && id > 0) { //bottom side
+          } else if (id % 2 == 1 && id <= lastBox && id > 0) {
+            //bottom side
             box.addSeed();
             id += 2;
           }
         }
-        window.turn = (window.turn == "Top Side") ? "Bot Side" : "Top Side";
+        window.turn = window.turn == "Top Side" ? "Bot Side" : "Top Side";
         this.turn.update();
       }
-      if(this.isEmpty()) this.endgame();
-      else if(this.isTopEmpty() && window.turn == "Top Side"){
+      if (this.isEmpty()) this.endgame();
+      else if (this.isTopEmpty() && window.turn == "Top Side") {
         window.turn = "Bot Side";
         this.turn.update();
-      } 
-      else if(this.isBotEmpty() && window.turn == "Bot Side"){
+      } else if (this.isBotEmpty() && window.turn == "Bot Side") {
         window.turn = "Top Side";
         this.turn.update();
         game.playComputer();
-      }       
-    }
-    else{
+      }
+    } else {
       let id = parseInt(boxDiv.id);
-
+      box_if: if (
+        (window.turn == "Bot Side" && id % 2 == 1) ||
+        (window.turn == "Top Side" && id % 2 == 0)
+      ) {
+      }
     }
-    
   }
 
   getBox(id) {
@@ -367,146 +375,155 @@ class GameBoard {
     return null;
   }
 
-  isEmpty(){
-    if(this.isTopEmpty() && this.isBotEmpty()) return true;
+  isEmpty() {
+    if (this.isTopEmpty() && this.isBotEmpty()) return true;
     return false;
   }
 
-  isTopEmpty(){
+  isTopEmpty() {
     for (let i = 0; i < this.boxs.length; i += 2) {
       let box = this.getBox(i);
-      if(!box.isEmpty()) return false;
+      if (!box.isEmpty()) return false;
     }
     return true;
   }
 
-  isBotEmpty(){
+  isBotEmpty() {
     for (let i = 1; i < this.boxs.length; i += 2) {
       let box = this.getBox(i);
-      if(!box.isEmpty()) return false;
+      if (!box.isEmpty()) return false;
     }
     return true;
   }
 
-  async endgame(){
+  async endgame() {
     await delay(0.5);
     let winner = this.whoWon();
-    if(winner == "left") window.alert("Top won");
-    else if(winner == "right" && isLoggedIn) window.alert("Bot won");
+    if (winner == "left") window.alert("Top won");
+    else if (winner == "right" && isLoggedIn) window.alert("Bot won");
     else window.alert("It's a tie!!");
     window.stopGame = true;
   }
 
-  whoWon(){
+  whoWon() {
     let left = this.warehouses[0].size();
     let right = this.warehouses[1].size();
-    if(left > right) return "left";
-    else if(right > left) return "right";
+    if (left > right) return "left";
+    else if (right > left) return "right";
     return "tie";
   }
 
-  async playComputer(){
+  async playComputer() {
     await delay(1);
     let n;
     let box;
-    switch(this.difficulty){
+    switch (this.difficulty) {
       case "Easy":
-        do{
+        do {
           n = getRandom(0, this.boxs.length);
           box = this.getBox(n);
-          if(this.isTopEmpty()) break;
-        }
-        while(n % 2 == 1 || box.size() == 0)
-        if(this.isTopEmpty()) break;
+          if (this.isTopEmpty()) break;
+        } while (n % 2 == 1 || box.size() == 0);
+        if (this.isTopEmpty()) break;
         this.play(box.box);
         break;
       case "Medium":
         break;
       case "Hard":
-
         break;
     }
   }
 
-    checkRegister(data){
-      if (isObjectEmpty(data)){
-        console.log("Registo sucedido");
-        main_user.login();
-      }
-      if (data.error=="User registered with a different password"){
-          isLoggedin = false;
-          main_user.wrongLogin();
-      }
+  checkRegister(data) {
+    if (isObjectEmpty(data)) {
+      console.log("Registo sucedido");
+      main_user.login();
     }
-    
-    checkRanking(data){
-      if(isObjectEmpty(data)) alert("Error checkRanking");
-      else{
-        addToClass(data);
-      } 
+    if (data.error == "User registered with a different password") {
+      isLoggedin = false;
+      main_user.wrongLogin();
     }
-    
-    checkJoin(data){
-      if(isObjectEmpty(data)) alert("Error: in checkJoin, data is empty.");
-      else{
-        if(data.hasOwnProperty("game")){
-          game_code = data.game;
-          alert("You entered in a game.");
-          this.openServer();
-          console.log("checkJoing data: ");
-          console.log(data);
-        }
-        else alert("Error: data doesn't have property game.")
-      }
-    }
+  }
 
-    checkLeave(data){
-      if (isObjectEmpty(data)){
-        eventSource.close();
-        console.log("Player left.");
-        alert("You left the game.");
-      }
-      else{
+  checkRanking(data) {
+    if (isObjectEmpty(data)) alert("Error checkRanking");
+    else {
+      addToClass(data);
+    }
+  }
+
+  checkJoin(data) {
+    if (isObjectEmpty(data)) alert("Error: in checkJoin, data is empty.");
+    else {
+      if (data.hasOwnProperty("game")) {
+        game_code = data.game;
+        alert("You entered in a game.");
+        this.openServer();
+        console.log("checkJoing data: ");
         console.log(data);
-        alert("Error: in checkLeave");
-      }
+      } else alert("Error: data doesn't have property game.");
     }
-    
-    openServer(){//not finished
-    
-      if(!isLoggedIn){
-        alert("Please login first.");
-        return;
-      }
-      let server = "twserver.alunos.dcc.fc.up.pt"
-      eventSource = new EventSource('http://'+server+':'+'8008'+'/update?nick='+encodeURIComponent(main_user.name)+'&game='+encodeURIComponent(game_code));
-    
-      eventSource.onmessage = function(event){//ler o que o outro jogador jogou
-        let data = JSON.parse(event.data);
-        if(data.board.turn == main_user.name){
-          alert("You're first, you play in the top side.")
-          
-        } 
-        //console.log("openServer data: ");
-        //console.log(data);
-      }
-    
-    }
+  }
 
-  giveUp(){
+  checkLeave(data) {
+    if (isObjectEmpty(data)) {
+      eventSource.close();
+      console.log("Player left.");
+      alert("You left the game.");
+    } else {
+      console.log(data);
+      alert("Error: in checkLeave");
+    }
+  }
+
+  openServer() {
+    //not finished
+
+    if (!isLoggedIn) {
+      alert("Please login first.");
+      return;
+    }
+    let server = "twserver.alunos.dcc.fc.up.pt";
+    eventSource = new EventSource(
+      "http://" +
+        server +
+        ":" +
+        "8008" +
+        "/update?nick=" +
+        encodeURIComponent(main_user.name) +
+        "&game=" +
+        encodeURIComponent(game_code)
+    );
+
+    eventSource.onmessage = function (event) {
+      //ler o que o outro jogador jogou
+      let data = JSON.parse(event.data);
+      window.turn = data.board.turn;
+      updateGameBoardMP(data);
+      console.log("openserver: ");
+      console.log(data);
+    };
+  }
+
+  checkUpdate(data){
+    console.log("checkUpdate: ");
+    console.log(data);
+  }
+
+  giveUp() {
     /*if(window.turn == "Top Side") window.alert("Top Side gave up");
     else window.alert("Bot Side gave up");*/
     this.leave();
     window.stopGame = true;
   }
 
-  sendRequest(obj,command){ 
+  sendRequest(obj, command) {
     const xhr = new XMLHttpRequest();
-    let server = "twserver.alunos.dcc.fc.up.pt"
-    xhr.open('POST','http://'+server+':'+8008+'/'+command,true);
-    xhr.onreadystatechange = function() {
+    let server = "twserver.alunos.dcc.fc.up.pt";
+    xhr.open("POST", "http://" + server + ":" + 8008 + "/" + command, true);
+    xhr.onreadystatechange = function () {
       if (xhr.readyState < 4) return;
-      let data=JSON.parse(xhr.responseText);
+      let data = JSON.parse(xhr.responseText);
       switch (command) {
         case "join":
           window.game.checkJoin(data);
@@ -524,18 +541,21 @@ class GameBoard {
           window.game.checkRegister(data);
           break;
         case "update":
-          window.game.checkUpdate(data); 
+          window.game.checkUpdate(data);
           break;
-      }           
-    }  
+      }
+    };
     xhr.send(JSON.stringify(obj));
   }
 
-  leave(){
-    let data = {'game': game_code, 'nick': main_user.name, 'password': main_user.pw};
-    this.sendRequest(data,"leave");
+  leave() {
+    let data = {
+      game: game_code,
+      nick: main_user.name,
+      password: main_user.pw,
+    };
+    this.sendRequest(data, "leave");
   }
-
 }
 
 class Box {
@@ -567,13 +587,13 @@ class Box {
     }
     this.counter.reset();
   }
-  
+
   size() {
     return this.box.childElementCount;
   }
 
-  isEmpty(){
-    if(this.size() == 0) return true;
+  isEmpty() {
+    if (this.size() == 0) return true;
     return false;
   }
 }
@@ -602,7 +622,7 @@ class Warehouse {
     this.counter.reset();
   }
 
-  size(){
+  size() {
     return this.box.childElementCount;
   }
 }
@@ -660,13 +680,13 @@ class Counter {
   }
 }
 
-class Turn{
-  constructor(){
+class Turn {
+  constructor() {
     this.turn = document.getElementsByClassName("turn")[0];
-    this.turn.innerHTML = ("Turn: " + window.turn);
+    this.turn.innerHTML = "Turn: " + window.turn;
   }
 
-  update(){
-    this.turn.innerHTML =  ("Turn: " + window.turn);
+  update() {
+    this.turn.innerHTML = "Turn: " + window.turn;
   }
 }
