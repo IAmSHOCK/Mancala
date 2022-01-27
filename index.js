@@ -511,8 +511,8 @@ class GameBoard {
   }
 
   giveUp() {
-    /*if(window.turn == "Top Side") window.alert("Top Side gave up");
-    else window.alert("Bot Side gave up");*/
+    if(window.turn == "Top Side") window.alert("Top Side gave up");
+    else window.alert("Bot Side gave up");
     this.leave();
     window.stopGame = true;
   }
